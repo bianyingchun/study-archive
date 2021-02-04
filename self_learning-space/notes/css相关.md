@@ -1,0 +1,2 @@
+position:fixed在当前视图基于父元素定位_
+　　不设置position: fixed的top值，用magin来控制当前子块的位置，这样就能达到在当前窗口基于父元素定位来实现自己想要的效果了。

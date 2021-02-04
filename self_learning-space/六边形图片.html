@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<style>
+    .wrap{
+        height:110px;
+        width: 190px;
+        position: relative;
+        margin: 200px auto;
+        background: url('../img/timg (1).jpg') 50% 50% no-repeat; 
+        background-size: auto 220px;
+    }
+    .common{
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        left:0;
+
+    }
+    .common:before{
+        content:'';
+        position: absolute;
+        background:url('../img/timg (1).jpg') 50% 50% no-repeat;
+        background-size: auto 220px;
+        width: 190px;
+        height: 220px;
+    }
+    .left{
+        transform: rotate(60deg);
+    }
+    .left:before{
+        transform: rotate(-60deg) translate(48px,-28px);
+    }
+    .right{
+        transform: rotate(-60deg);
+    }
+    .right:before{
+         transform: rotate(60deg) translate(48px,28px);
+         bottom: 0;
+    }
+</style>
+<body>
+<!-- 三个元素旋转定位和伪元素实现图片位置正确 -->
+    <div class='wrap'>
+        <div class='left common'></div>
+        <div class='right common'></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+  <meta charset="UTF-8">
+  <title>data-binding-drity-check</title>
+</head>
+ 
+<body>
+  <div id="app">
+    <input type="text" ng-model='text'>
+    {{text}}
+  </div>
+ 
+  <script>
+ //脏检查
+ function Scope(data) {
+  this.$$watchList = [];
+  for(var obj in data) {
+   this[obj] = data[obj];
+  }
+}
+  
+Scope.prototype.$watch = function(name, getNewValue, listener){
+    var watch = {
+      name:name,
+      getNewValue:getNewValue,
+      listener:listener||function() {}
+    };
+    this.$$watchList.push(watch);
+  }
+
+  Scope.prototype.$digestOnce = function() {
+    var dirty;
+    var list = this.$$watchList;
+    for(var i = 0; i < list.length; i++) {
+      var watch  = list[i];
+      var newValue = watch.getNewValue(this);
+      var oldValue = watch.last;
+      if(newValue!=oldValue) {
+        watch.listener(newValue,oldValue);
+        dirty = true;
+      }
+      watch.last  = newValue;
+    }
+    return dirty;
+  }
+
+  Scope.prototype.$digest = function() {
+    var dirty = true;
+    var checkTimers = 0;
+    while(dirty){
+      dirty = this.$digestOnce();
+      checkTimers++;
+      if(checkTimers > 10 && dirty){
+        throw new Error('检测超过10次');
+        console.log('123');
+      }
+    }
+  }
+
+function nodeTofragment(node, scope){
+    var flag = document.createDocumentFragment();
+    var child;
+
+    while(child = node.firstChild) {
+      complie(child, scope)
+      flag.appendChild(child);
+    }
+    return flag;
+}
+
+function complie (node, scope) {
+  var reg = /\{\{(.*)\}\}/;
+  if(node.nodeType===1) {//元素节点
+    var attr = node.attributes;
+    for(var i = 0; i<attr.length; i++) {
+      if(attr[i].nodeName === 'ng-model'){
+        var name = attr[i].nodeValue;
+        node.addEventListener('input',function(e) {
+          scope[name] = e.target.value;
+          scope.$digest();
+        });
+        node.value = scope[name];
+        node.removeAttribute('ng-model');
+      }
+    }
+    scope.$watch(name,function(){ return scope[this.name]},function(newValue, oldValue){
+        node.value = newValue;
+        console.log('second:     newValue:' + newValue + '~~~~' + 'oldValue:' + oldValue);
+    })
+  }
+  if(node.nodeType === 3) {//文本节点
+    if(reg.test(node.nodeValue)) {
+      var name = RegExp.$1;
+      name = name.trim();
+      node.nodeValue = scope[name];
+      scope.$watch(name,function(){ return scope[this.name]},function(newValue, oldValue){
+        console.log('first:      newValue:' + newValue + '~~~~' + 'oldValue:' + oldValue);
+        node.nodeValue = newValue;
+    })
+    }
+  }
+}
+
+function Vue (options) {
+    var el = options.el;
+    var data = options.data;
+    this.scope = new Scope(data);
+    var dom = nodeTofragment(document.getElementById(el), this.scope);
+    document.getElementById(el).appendChild(dom);
+}
+  
+  var vm = new Vue({
+    el:'app',
+    data:{
+      text:'hello-world'
+    }
+  });
+
+// =================================
+
+
+// var scope = new Scope();
+// scope.first = 1;
+// scope.second = 10;
+// scope.$watch('first', function(scope) {
+//         return scope[this.name]
+//     },
+//     function(newValue, oldValue) {
+//         scope.second++;
+//         console.log('first:      newValue:' + newValue + '~~~~' + 'oldValue:' + oldValue);
+//     })
+
+// scope.$watch('second', function(scope) {
+//         return scope[this.name]
+//     },
+//     function(newValue, oldValue) {
+//         scope.first++;
+//         console.log('second:     newValue:' + newValue + '~~~~' + 'oldValue:' + oldValue);
+//     })
+
+
+  </script>
+</body>
+</html>
