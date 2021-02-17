@@ -1,4 +1,4 @@
-const getComment = async(opts = {}) => {
+const getComment = async (opts = {}) => {
     let { sort = -1, current_page = 1, page_size = 10, keyword = '', post_id, state } = opts
     if (keyword) {
 
