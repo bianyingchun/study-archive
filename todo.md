@@ -53,7 +53,9 @@
 ---
 
 ## 算法篇
+
 #### 堆排序
+
 ## 项目篇
 
 1. 整理 github 项目，添加到 blog
@@ -65,7 +67,3 @@
 
 github
 https://github.com/geekcompany/ResumeSample
-
-### 转载文章
-
-[揭秘 Vue.js 九个性能优化技巧](https://mp.weixin.qq.com/s/7u3hHp4zT7aTQTvQ6JjM-w)
