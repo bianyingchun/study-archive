@@ -61,6 +61,7 @@ promise 有 3 个状态，分别是 pending, fulfilled 和 rejected。
 promise 必须有 then 方法，接受 onFulfilled 和 onRejected 参数。then 方法必须返回 promise。
 
 1. onFulfilled 和 onRejected 如果是函数，必须最多执行一次。
+
 2. onFulfilled 的参数是 value，onRejected 函数的参数是 reason。
 
 then 方法可以被调用很多次，每次注册一组 onFulfilled 和 onRejected 的 callback。它们如果被调用，必须按照注册顺序调用。
@@ -74,10 +75,9 @@ then 方法可以被调用很多次，每次注册一组 onFulfilled 和 onRejec
 3. catch 不管被连接到哪里，都能捕获上层未捕捉过的错误。(见 3.2)
    在 Promise 中，返回任意一个非 promise 的值都会被包裹成 promise 对象，例如 return 2 会被包装为 return Promise.resolve(2)。
 4. Promise 的 .then 或者 .catch 可以被调用多次, 但如果 Promise 内部的状态一经改变，并且有了一个值，那么后续每次调用.then 或者.catch 的时候都会直接拿到该值。(见 3.5)
-5. .then 或者 .catch 中 return 一个 error 对象并不会抛出错误，所以不会被后续的 .catch 捕获。(见 3.6)
-6. .then 或 .catch 返回的值不能是 promise 本身，否则会造成死循环。(见 3.7)
-7. .then 或者 .catch 的参数期望是函数，传入非函数则会发生值透传。(见 3.8)
-
+5. then 或者 .catch 中 return 一个 error 对象并不会抛出错误，所以不会被后续的 .catch 捕获。(见 3.6)
+6. then 或 .catch 返回的值不能是 promise 本身，否则会造成死循环。(见 3.7)
+7. then 或者 .catch 的参数期望是函数，传入非函数则会发生值透传。(见 3.8)
 ```javascript
 Promise.resolve(1).then(2).then(Promise.resolve(3)).then(console.log);
 // 1
@@ -227,4 +227,60 @@ myAsync(function* () {
 // 1 2 3
 // 4
 // [1,2,3]
+```
+
+### promise 并发量控制
+题目描述：
+实现一个批量请求函数 multiRequest(urls, maxNum)，要求如下：
++ 要求最大并发数 maxNum
++ 每当有一个请求返回，就留下一个空位，可以增加新的请求
++ 所有请求完成后，结果按照 urls 里面的顺序依次打出
+
+```javascript
+/*整体采用递归调用来实现：最初发送的请求数量上限为允许的最大值，
+并且这些请求中的每一个都应该在完成时继续递归发送，
+通过传入的索引来确定了urls里面具体是那个URL，保证最后输出的顺序不会乱，而是依次输出。
+代码实现
+*/
+function multiRequest(urls = [], maxNum) {
+  // 请求总数量
+  const len = urls.length;
+  // 根据请求数量创建一个数组来保存请求的结果
+  const result = new Array(len).fill(false);
+  // 当前完成的数量
+  let count = 0;
+
+  return new Promise((resolve, reject) => {
+    // 请求maxNum个
+    while (count < maxNum) {
+      next();
+    }
+    function next() {
+      let current = count++;
+      // 处理边界条件
+      if (current >= len) {
+        // 请求全部完成就将promise置为成功状态, 然后将result作为promise值返回
+        !result.includes(false) && resolve(result);
+        return;
+      }
+      const url = urls[current];
+      console.log(`开始 ${current}`, new Date().toLocaleString());
+      fetch(url)
+        .then((res) => {
+          // 保存请求结果
+          result[current] = res;
+          console.log(`完成 ${current}`, new Date().toLocaleString());
+          // 请求没有全部完成, 就递归
+            next();
+        })
+        .catch((err) => {
+          console.log(`结束 ${current}`, new Date().toLocaleString());
+          result[current] = err;
+          // 请求没有全部完成, 就递归
+            next();
+          
+        });
+    }
+  });
+}
 ```
