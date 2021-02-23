@@ -1,41 +1,65 @@
 // 全排列
 function permutate(str) {
-  let arr = str.split("");
-  function core(arr, pre = []) {
-    if (arr.length === 1) {
-      return [pre.concat(arr).join("")];
-    }
-    let res = [];
-    for (let i = 0; i < arr.length; i++) {
-      let first = arr.pop();
-      res = res.concat(core(arr, [...pre, first]));
-      arr.unshift(first);
-    }
-    return res;
+  var result = []
+  if (str.length === 1) return [str]
+  for (let i = 0; i < str.length; i++) { 
+    //拿到当前的元素
+    const left = str[i]
+    //除当前元素的其他元素组合
+    const rest = str.slice(0, i) + str.slice(i + 1, str.length);
+    //上一次递归返回的全排列
+    const restResult = fullpermutate(rest)
+    //组合在一起
+    restResult.forEach(item => { 
+      result.push(left+item)
+    })
   }
-  return [...new Set(core(arr))];
+  return result
 }
 // test
 // console.log(permutate('abc'))
 
 // http://www.ruanyifeng.com/blog/2011/04/quicksort_in_javascript.html?bsh_bid=124324679
 // 快速排序
-function quickSort(arr) {
-  if (arr.length <= 1) return arr;
-  const pivotIndex = Math.floor(arr.length / 2);
-  const pivot = arr[pivotIndex];
-  const left = [],
-    right = [];
-  for (let i = 0; i < arr.length; i++) {
-    if (i === pivotIndex) continue;
-    let item = arr[i];
-    if (item < pivot) {
-      left.push(item);
-    } else {
-      right.push(item);
+//此版本空间复杂度较高，不是原地排序
+// function quickSort(arr) {
+//   if (arr.length <= 1) return arr;
+//   const pivotIndex = Math.floor(arr.length / 2);
+//   const pivot = arr[pivotIndex];
+//   const left = [],
+//     right = [];
+//   for (let i = 0; i < arr.length; i++) {
+//     if (i === pivotIndex) continue;
+//     let item = arr[i];
+//     if (item < pivot) {
+//       left.push(item);
+//     } else {
+//       right.push(item);
+//     }
+//   }
+//   return quickSort(left).concat([pivot], quickSort(right));
+// }
+function quickSort (arr) {
+  _quickSort(arr, 0, arr.length - 1)
+  return arr;
+  function _quickSort (arr, low, high) { 
+    if (low < high) { 
+      const pivotkey = partition(arr, low, high)
+      _quickSort(arr, low, pivotkey - 1)
+      _quickSort(arr, pivotkey+1, high)
     }
   }
-  return quickSort(left).concat([pivot], quickSort(right));
+  function partition (list, low, high) {
+    let pivotkey = list[low]
+     while (low < high) { 
+       while (low < high && list[high] >= pivotkey) high--
+       list[low] = list[high]
+       while (low < high && list[low] <= pivotkey) low++
+       list[high] = list[low]
+     }
+     list[low] = pivotkey;
+     return low
+   }
 }
 
 // test
