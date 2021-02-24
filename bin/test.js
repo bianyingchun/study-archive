@@ -1,36 +1,21 @@
-
-
-var maxArea = function(height) {
-  let max = 0;
-  let i = 0;
-  let j = height.length - 1;
-  while(i < j) {
-    let minHeight = Math.min(height[i], height[j])
-    let area = (j - i) * minHeight;
-    max = Math.max(max, area)
-    if(height[i] < height[j]) {
-        i++
-    } else {
-        j--
-    }
+var coinChange = function(coins, amount) {
+  let dp = new Array(amount+1).fill(Infinity)
+  dp[0] = 0;
+  for (let i=0;i<= amount;i++) {
+      for (let coin of coins) {
+          if (i - coin >= 0) {
+              dp[i] = Math.min(dp[i], dp[i-coin]+1)
+          }
+      }
   }
-  return max
+  return dp[amount] === Infinity ? -1 : dp[amount]
 };
 
-function maxArea () { 
-  let max = 0;
-  let i = 0, j = height.length - 1;
-  while (i < j) {
-    let minHeight = Math.min(height[i], height[j])
-    let area = (j - i) * minHeight;
-    max = Math.max(max, area)
-    if (height[i] < height[j]) {
-      i++;
-    } else { 
-      j--
-    }
-  }
-}
+
+
+// 状态方程
+
+// dp[i] = Math.min(dp[i - coin] + 1, dp[i - coin] + 1, ...)
 
 
 
