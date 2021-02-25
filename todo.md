@@ -22,8 +22,11 @@
    https://segmentfault.com/a/1190000022205291
 
 9. 实现 Function 的 bind，使得输出 success
+
 10. ~~垃圾回收~~
+
 11. ~~如何实现 async/await~~
+
 12. 跨域
 
 ### service worker

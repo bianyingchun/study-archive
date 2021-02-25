@@ -1,27 +1,113 @@
-var coinChange = function(coins, amount) {
-  let dp = new Array(amount+1).fill(Infinity)
-  dp[0] = 0;
-  for (let i=0;i<= amount;i++) {
-      for (let coin of coins) {
-          if (i - coin >= 0) {
-              dp[i] = Math.min(dp[i], dp[i-coin]+1)
-          }
+function tokenizer(input) {
+  // 生成词素
+  let current = 0;
+  let tokens = [];
+  while (current < input.length) {
+    let char = input[current];
+    if (char === "(") {
+      tokens.push({
+        type: "paren",
+        value: "(",
+      });
+      current++;
+      continue;
+    }
+    if (char === ")") {
+      tokens.push({
+        type: "paren",
+        value: ")",
+      });
+      current++;
+      continue;
+    }
+
+    let WHITESPACE = /\s/;
+    if (WHITESPACE.test(char)) {
+      current++;
+      continue;
+    }
+    let NUMBERS = /[0-9]/;
+    if (NUMBERS.test(char)) {
+      let value = "";
+      while (NUMBERS.test(char)) {
+        value += char;
+        char = input[++current];
       }
+
+      tokens.push({ type: "number", value });
+      continue;
+    }
+    if (char === '"') {
+      let value = "";
+      char = input[++current];
+      while (char !== '"') {
+        value += char;
+        char = input[++current];
+      }
+      char = input[++current];
+      tokens.push({ type: "string", value });
+
+      continue;
+    }
+    let LETTERS = /[a-z]/i;
+    if (LETTERS.test(char)) {
+      let value = "";
+      while (LETTERS.test(char)) {
+        value += char;
+        char = input[++current];
+      }
+      tokens.push({ type: "name", value });
+      continue;
+    }
+    throw new TypeError("I dont know what this character is: " + char);
   }
-  return dp[amount] === Infinity ? -1 : dp[amount]
+  return tokens;
+}
+
+function parser(tokens) {
+  let current = 0;
+  function walk() {
+    let token = tokens[current];
+    if (token.type === "number") {
+      // 数字
+      current++;
+      return {
+        type: "NumberLiteral",
+        value: token.value,
+      };
+    }
+
+    if (token.type === "string") {
+      // 字符串
+      current++;
+      return {
+        type: "StringLiteral",
+        value: token.value,
+      };
+    }
+    if (token.type === "paren" && token.value === "(") {
+      token = tokens[++current];
+      let node = {
+        type: "CallExpression",
+        name: token.value,
+        params: [],
+      };
+      token = tokens[++current];
+      while (
+        token.type !== "paren" ||
+        (token.type === "paren" && token.value !== ")")
+      ) {
+        node.params.push(walk());
+        token = tokens[current];
+      }
+      current++;
+      return node;
+    }
+    throw new TypeError(token.type);
+  }
+}
+
+let ast = {
+  type: "Program",
+  body: [],
 };
-
-
-
-// 状态方程
-
-// dp[i] = Math.min(dp[i - coin] + 1, dp[i - coin] + 1, ...)
-
-
-
-
-
-
-
-
-
