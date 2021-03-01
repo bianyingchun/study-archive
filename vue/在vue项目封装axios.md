@@ -6,7 +6,7 @@ axios 是一个轻量的 HTTP客户端，拥有众多优秀的特性，支持浏
 ### 创建实例,
 ```javascript
 const axios = require("axios");
-const instance = axios.create({ timeout: 1000 * 10 });
+const instance = axios.create({});
 ```
 ### 切换环境，设置接口请求前缀
 ```javascript

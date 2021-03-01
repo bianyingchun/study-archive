@@ -52,7 +52,9 @@
 ### jwt
 
 ### webWoker
-
+https://zhuanlan.zhihu.com/p/47326066
+http://www.ruanyifeng.com/blog/2018/07/web-worker.html
+### blob
 ---
 
 ## 算法篇
