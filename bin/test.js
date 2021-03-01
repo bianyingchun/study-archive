@@ -1,113 +1,25 @@
-function tokenizer(input) {
-  // 生成词素
-  let current = 0;
-  let tokens = [];
-  while (current < input.length) {
-    let char = input[current];
-    if (char === "(") {
-      tokens.push({
-        type: "paren",
-        value: "(",
-      });
-      current++;
-      continue;
-    }
-    if (char === ")") {
-      tokens.push({
-        type: "paren",
-        value: ")",
-      });
-      current++;
-      continue;
-    }
+{/* <body>
+    <button id="expire1">过期设置(暴力法)</button>
+    <button id="expire2">过期设置(innerHTMl)</button>
+    <ul id="wrap"></ul>
+</body> */}
 
-    let WHITESPACE = /\s/;
-    if (WHITESPACE.test(char)) {
-      current++;
-      continue;
-    }
-    let NUMBERS = /[0-9]/;
-    if (NUMBERS.test(char)) {
-      let value = "";
-      while (NUMBERS.test(char)) {
-        value += char;
-        char = input[++current];
-      }
+function getExpireKey() {
+    let keys = []
 
-      tokens.push({ type: "number", value });
-      continue;
-    }
-    if (char === '"') {
-      let value = "";
-      char = input[++current];
-      while (char !== '"') {
-        value += char;
-        char = input[++current];
-      }
-      char = input[++current];
-      tokens.push({ type: "string", value });
+    while (keys.length < 100) {
+        let randomKey = Math.floor(Math.random() * 1000)
+        if (keys.indexOf(randomKey) === -1) {
 
-      continue;
+        }
     }
-    let LETTERS = /[a-z]/i;
-    if (LETTERS.test(char)) {
-      let value = "";
-      while (LETTERS.test(char)) {
-        value += char;
-        char = input[++current];
-      }
-      tokens.push({ type: "name", value });
-      continue;
-    }
-    throw new TypeError("I dont know what this character is: " + char);
-  }
-  return tokens;
 }
 
-function parser(tokens) {
-  let current = 0;
-  function walk() {
-    let token = tokens[current];
-    if (token.type === "number") {
-      // 数字
-      current++;
-      return {
-        type: "NumberLiteral",
-        value: token.value,
-      };
-    }
-
-    if (token.type === "string") {
-      // 字符串
-      current++;
-      return {
-        type: "StringLiteral",
-        value: token.value,
-      };
-    }
-    if (token.type === "paren" && token.value === "(") {
-      token = tokens[++current];
-      let node = {
-        type: "CallExpression",
-        name: token.value,
-        params: [],
-      };
-      token = tokens[++current];
-      while (
-        token.type !== "paren" ||
-        (token.type === "paren" && token.value !== ")")
-      ) {
-        node.params.push(walk());
-        token = tokens[current];
-      }
-      current++;
-      return node;
-    }
-    throw new TypeError(token.type);
-  }
+const el = document.createDocumentFragment()
+let allKeys = []
+for (let i = 0; i < 1000; i++) {
+    let item = document.createElement('li')
+    li.dataset.key = i;
+    li.innerHTML = i;
+    el.appendChild(item)
 }
-
-let ast = {
-  type: "Program",
-  body: [],
-};

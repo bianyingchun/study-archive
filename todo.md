@@ -57,7 +57,20 @@
 
 ## 算法篇
 
+leetcode Top100
+剑指 offer
+
 #### 堆排序
+
+## React 篇
+
+1. 性能优化
+   https://kaiwu.lagou.com/course/courseInfo.htm?courseId=566#/detail/pc?id=5803
+2. fiber
+   http://www.ayqy.net/blog/dive-into-react-fiber/
+3. redux-saga
+4. mobx
+5. ~~react-router~~
 
 ## 项目篇
 
@@ -65,13 +78,14 @@
 2. 整理 work 项目，总结
 
 ## 博客
-~~1. 基于全站缓存的前进刷新，后退刷新方案~~
-2. jwt token方案
-3. 排行榜方案
-4. notify 方案
+
+~~1. 基于全站缓存的前进刷新，后退刷新方案~~ 2. jwt token 方案 3. 排行榜方案 4. notify 方案
+
 ---
 
 ## 简历
 
 github
 https://github.com/geekcompany/ResumeSample
+
+### 复盘直播课笔记+截屏
