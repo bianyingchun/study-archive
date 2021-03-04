@@ -67,9 +67,62 @@ Page({}) onLoad -> onShow->onReady
   },
 
 ```
+
 3. 注册components
 json文件中的usingComponents选项
-
+组件生命周期
+```javascript
+/*组件生命周期*/ 
+  lifetimes: {
+    created() {
+      console.log("在组件实例刚刚被创建时执行")
+    },
+    attached() { 
+      console.log("在组件实例进入页面节点树时执行")
+    },
+    ready() {
+      console.log("在组件在视图层布局完成后执行")
+    },
+    moved() {
+      console.log("在组件实例被移动到节点树另一个位置时执行")
+    },
+    detached() {
+      console.log("在组件实例被从页面节点树移除时执行")
+    },
+    error() {
+      console.log("每当组件方法抛出错误时执行")
+    },
+    /*组件所在页面的生命周期 */
+    pageLifetimes: {
+      show: function () {
+        // 页面被展示
+        console.log("页面被展示")
+      },
+      hide: function () {
+        // 页面被隐藏
+        console.log("页面被隐藏")
+      },
+      resize: function (size) {
+        // 页面尺寸变化
+        console.log("页面尺寸变化")
+      }
+    }
+  ```
+### app.js
+1. onLaunch: 
+  1. 初始化 globalData = {
+    app_id: "wx6e619d1f8d2fefe7",
+      rank_changed: true,      
+      score_add_per_click: 25, 
+      score_add_per_helper: 100,
+      game_duration: 30,
+      rank_list_limit: 20,
+      page_limit: 20,
+  }
+  2. 初始化audio上下文
+  3. 开启定时器
+2. onShow 
+  1. 播放bgm
 ### 全局数据 globalData
 rank_changed: 排名是否更新
 openid:当前登录用户(每个用户在不同小程序的openid是不同的，但在同一个小程序中始终相同)
@@ -78,15 +131,13 @@ top_rank_list : top50 排行榜
 
 ## 页面
 ### index 首页
-webview 中嵌入入口h5页面
-1. onLoad() 调用云函数login 获得用户openid
-2. 调用dbms.get_record(openid) 查找当前用户是否有游戏记录，有则更新globalData.current_user_record,跳转到结果页result，
-
+播放入场视频，设置全屏显示，检测参数option.replay 为真重新播放
 ### entry 游戏入口页
 <button class='nav_btn' open-type="getUserInfo" 
       bindgetuserinfo="onGetUserInfo" plain="true">
       我要点亮行星发动机
 </button>
+获得当前用户/login, 查找用户游戏记录
 点击按钮， 授权获得用户信息后转向游戏页 game
 
 ### game 游戏页
@@ -94,6 +145,7 @@ webview 中嵌入入口h5页面
 1. 发动机地图，底部是一个bg-image，上层是一个canvas 负责绘制点亮的行星点
 2. 进度条
 显示倒计时
+
 3. 成绩
   + 点亮的数目
   + 灯光 opacity表示亮度 点击的行星发送机越多越量
@@ -123,7 +175,9 @@ onUnload() {
 },
 ```
 
-用户点击游戏按钮时，setInterval开启定时器，每隔一秒，更新剩余时间，并随着用户点击重绘canvas，显示已经点亮的行星发动机。在时间用尽后，dbms.save_record 保存用户记录，更新rank_changed， current_user_record，top_rank_list。跳转到结果页result.
+用户点击游戏按钮时，setInterval开启定时器，每隔一秒，更新剩余时间，并随着用户点击重绘canvas，显示已经点亮的行星发动机。
+
+在时间用尽后，dbms.save_record 保存用户记录，更新rank_changed， current_user_record，top_rank_list。跳转到结果页result.
 
 
 

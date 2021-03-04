@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-  
-=======
 {/* <body>
     <button id="expire1">过期设置(暴力法)</button>
     <button id="expire2">过期设置(innerHTMl)</button>
@@ -26,4 +23,3 @@ for (let i = 0; i < 1000; i++) {
     li.innerHTML = i;
     el.appendChild(item)
 }
->>>>>>> ab4825b4128c3e68a80d122d72468dd5dba1a18e
