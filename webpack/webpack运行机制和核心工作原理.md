@@ -11,8 +11,8 @@
 2. 核心工作环节
    1. Webpack CLI 启动打包流程；
       Webpack CLI 的作用就是将 CLI 参数和 Webpack 配置文件中的配置整合，得到一个完整的配置对象。所谓 CLI 参数指的就是我们在运行 webpack 命令时通过命令行传入的参数
-   2. 载入 Webpack 核心模块，创建 Compiler 对象；
-   3. 使用 Compiler 对象开始编译整个项目；
+   2. 载入 Webpack 核心模块，创建 Compiler 对象
+   3. 使用 Compiler 对象执行 run 方法开始执行编译；开始编译整个项目；
    4. 从入口文件开始，解析模块依赖，形成依赖关系树；
    5. 递归依赖树，将每个模块交给对应的 Loader 处理；
    6. 合并 Loader 处理完的结果，将打包结果输出到 dist 目录。

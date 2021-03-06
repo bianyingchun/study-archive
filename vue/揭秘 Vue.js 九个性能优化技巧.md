@@ -39,9 +39,9 @@
 ```
 
 然后我们在父组件各渲染优化前后的组件 800 个，并在每一帧内部通过修改数据来触发组件的更新，开启 Chrome 的 Performance 面板记录它们的性能，得到如下结果。
-![图片](https://mmbiz.qpic.cn/mmbiz_png/gmvn5bBaW09ahicJIWyBmbb8LZPtKkmxw2ick5XXJiaYk2Y5SQeos6ibibMoB0Qb0IazLkqkWluKj0pdJUbMjBJOXjg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdUbW1QMURYeVNJQ3AxTk1WaDY2Vzg3UjdmYmtCNkpWd0Z4d0lBMWw0ZjVJakpsSXBObG9HTGcvNjQw?x-oss-process=image/format,png)
 优化后
-![图片](https://mmbiz.qpic.cn/mmbiz_png/gmvn5bBaW09ahicJIWyBmbb8LZPtKkmxw9DQjvd3ibHuQX0s7rVZbB7m2f4vgxB2paxJibC5aAWnrs0gemtRl4Bibg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdmaWNTbDh1dGlhaWN3MThBN1pqV3poeDBFZG94SnRWMWliMU9BbUg1OGtIMEx6aWM0cGNHVjVocjBndy82NDA?x-oss-process=image/format,png)
 对比这两张图我们可以看到优化后执行 script 的时间要明显少于优化前的，因此性能体验更好。
 
 那么为什么会有差异呢，我们来看优化前的组件，示例通过一个 heavy 函数模拟了一个耗时的任务，且这个函数在每次渲染的时候都会执行一次，所以每次组件的渲染都会消耗较长的时间执行 JavaScript。
@@ -121,10 +121,10 @@
 然后我们在父组件各渲染优化前后的组件 300 个，并在每一帧内部通过修改数据来触发组件的更新，开启 Chrome 的 Performance 面板记录它们的性能，得到如下结果。
 
 优化前：
-![图片](https://mmbiz.qpic.cn/mmbiz_png/gmvn5bBaW09ahicJIWyBmbb8LZPtKkmxwJr2AzMTdG9SNT3cvPmSY4Ukgnccuk3lGZ5KZ6PD80Ehu1oNhpAGcRA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHcyaWNrNVhYSmlhWWsyWTVTUWVvczZpYmliTW9CMFFiMElhekxrcWtXbHVLajBwZEpVYk1qQkpPWGpnLzY0MA?x-oss-process=image/format,png)
 
 优化后:
-![图片](https://mmbiz.qpic.cn/mmbiz_png/gmvn5bBaW09ahicJIWyBmbb8LZPtKkmxwS7caPVHPSLSmQLjQdlziaDOD1RvkhYkmkN4YvTJGFUicVmPG5ETxMqVA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHc5RFFqdmQzaWJIdVFYMHM3clZaYkI3bTJmNHZneEIycGF4SmliQzVhQVducnMwZ2VtdFJsNEJpYmcvNjQw?x-oss-process=image/format,png)
 
 对比这两张图我们可以看到优化后执行 script 的时间要明显少于优化前的，因此性能体验更好。
 
@@ -175,9 +175,9 @@
 然后我们在父组件各渲染优化前后的组件 200 个，并在每一帧内部通过修改数据来触发组件的更新，开启 Chrome 的 Performance 面板记录它们的性能，得到如下结果。
 
 优化前：
-![图片](https://mmbiz.qpic.cn/mmbiz_png/gmvn5bBaW09ahicJIWyBmbb8LZPtKkmxw2mm8NeicXUv4kXWTjtoeeaB7ZxQS9Y2Bx8cdds7YMojEBGOic3DH5Y6g/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdKcjJBek1UZEc5U05UM2N2UG1TWTRVa2duY2N1azNsR1o1S1o2UEQ4MEVodTFvTmhwQUdjUkEvNjQw?x-oss-process=image/format,png)
 优化后：
-![图片](https://mmbiz.qpic.cn/mmbiz_png/gmvn5bBaW09ahicJIWyBmbb8LZPtKkmxwG2lLpIIe7o6BlZmciaElHHbl3suz3WqQGfvBfHRNmTqKGQL0YlW0vkw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdTN2NhUFZIUFNMU21RTGpRZGx6aWFET0QxUnZraFlrbWtONFl2VEpHRlVpY1ZtUEc1RVR4TXFWQS82NDA?x-oss-process=image/format,png)
 
 对比这两张图我们可以看到优化后执行 script 的时间要明显少于优化前的，因此性能体验更好。
 
@@ -286,15 +286,11 @@ function render() {
 
 优化前：
 
-图片
-
-图片
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdMUTVsem9ubmhUWm9zQ2VRb1c3VmpiZVJSSTBwS0ZFTXYwalFpYVgwUnY4cjI0Q24xcW1HeWdBLzY0MA?x-oss-process=image/format,png)
 
 优化后：
 
-图片
-
-图片
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHd1VjRKaWFxa3QwTlRCVjB3dlVQQVZYZW5HSTlWVDU2QWZwRTlHRWliUXJIOHNDaWNOODljRkRpYmxnLzY0MA?x-oss-process=image/format,png)
 
 对比这两张图我们可以看到优化后执行 script 的时间要明显少于优化前的，因此性能体验更好。
 
@@ -353,11 +349,11 @@ function render() {
 我们点击按钮在 Simple page 和 Heavy Page 之间切换，会渲染不同的视图，其中 Heavy Page 的渲染非常耗时。我们开启 Chrome 的 Performance 面板记录它们的性能，然后分别在优化前后执行如上的操作，会得到如下结果。
 
 优化前：
-![图片](https://mmbiz.qpic.cn/mmbiz_png/gmvn5bBaW09ahicJIWyBmbb8LZPtKkmxwpEYcNV9IE3OLQu7Qe4XxcKfUDeVPsp9QgAvHuXqBOB9eocAR7l5qYA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdic1JTZ2x5R2hQTEF6c01qdVByVDBUY3V2bENmOUZjeHJHSHVJZlc2RXl0RVdjNlFWTGNDT1EvNjQw?x-oss-process=image/format,png)
 
 优化后：
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/gmvn5bBaW09ahicJIWyBmbb8LZPtKkmxwZOQ50j2FS9bDBmqia6hIbyuH83v0T1gP1IEfTnUSyV2Ax9KyJZ2YxMw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdORkppYjNJbVpQZ1VnUk9Td1dBV3RGOGU3WGhBVVZSZWNGeG9wWFl0cTdnQWtJSXNuY0EyY0xRLzY0MA?x-oss-process=image/format,png)
 
 对比这两张图我们可以发现，优化前当我们从 Simple Page 切到 Heavy Page 的时候，在一次 Render 接近结尾的时候，页面渲染的仍然是 Simple Page，会给人一种页面卡顿的感觉。而优化后当我们从 Simple Page 切到 Heavy Page 的时候，在一次 Render 靠前的位置页面就已经渲染了 Heavy Page 了，并且 Heavy Page 是渐进式渲染出来的。
 
@@ -437,12 +433,10 @@ fetchItems ({ commit }, { items, splitCount }) {
 
 优化前：
 
-图片
-
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdYTnBEajhLYlFsaWJpYnF2SWlhZDV4ckRKa2xWaWFFc2liQXRrOXdLNlJhbzNJWEtwUUhVNXVjN1pGUS82NDA?x-oss-process=image/format,png)
 优化后：
 
-图片
-
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdXeXc5Wks5WFo1MVBmZTRhbmVCTE9yY1c5Qm5sa0hmRU5BYkYwbE8zU1d4a2NvbEdHVnZLOXcvNjQw?x-oss-process=image/format,png)
 对比这两张图我们可以发现，优化前总的 script 执行时间要比优化后的还要少一些，但是从实际的观感上看，优化前点击提交按钮，页面会卡死 1.2 秒左右，在优化后，页面不会完全卡死，但仍然会有渲染卡顿的感觉。
 
 那么为什么在优化前页面会卡死呢？因为一次性提交的数据过多，内部 JS 执行时间过长，阻塞了 UI 线程，导致页面卡死。
@@ -490,12 +484,10 @@ return itemData
 还是前面的示例，我们先通过点击 Genterate items 按钮创建 10000 条假数据，然后分别在开启和关闭 Partial reactivity 的情况下点击 Commit items 按钮提交数据，开启 Chrome 的 Performance 面板记录它们的性能，会得到如下结果。
 
 优化前：
-
-图片
-
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdCRVV3ZVpUeDhrZWpjRnlybzlnQWJrVGZtaWFoN09GTE9QUjVqdTRpYzF6amFKd01WYjg3cDZ3Zy82NDA?x-oss-process=image/format,png)
 优化后：
 
-图片
+![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdqd3p4NzhXQW1td0Jha2J0c29tTDZneWhUZE1taWEzb2tXUFI2bGljalZweVBpY2JNOXpkUFB2Q3cvNjQw?x-oss-process=image/format,png)
 
 对比这两张图我们可以看到优化后执行 script 的时间要明显少于优化前的，因此性能体验更好。
 
@@ -546,13 +538,10 @@ export default {
 ```
 
 还是前面的示例，我们需要开启 View list，然后点击 Genterate items 按钮创建 10000 条假数据（注意，线上示例最多只能创建 1000 条数据，实际上 1000 条数据并不能很好地体现优化的效果，所以我修改了源码的限制，本地运行，创建了 10000 条数据），然后分别在 Unoptimized 和 RecycleScroller 的情况下点击 Commit items 按钮提交数据，滚动页面，开启 Chrome 的 Performance 面板记录它们的性能，会得到如下结果。
-
-优化前：
-
-优化后：
-
-图片
-
+优化前
+![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHcxamhRU1pzQnZ0UWNjMWhJWjU1VjlsRVlsbVU3eU9ZdUhnR3JIYm5UaHpucWlhV1VpYk5jU0hwdy82NDA?x-oss-process=image/format,png)
+优化后
+![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdRaWFYUTFaUDZJcTF0a0pmUTNoZkdyWnZOa3JscjVPeFZxWnQ2WFp0MjhzVTlWdzhxRVJQeVV3LzY0MA?x-oss-process=image/format,png)
 对比这两张图我们发现，在非优化的情况下，10000 条数据在滚动情况下 fps 只有个位数，在非滚动情况下也就十几，原因是非优化场景下渲染的 DOM 太多，渲染本身的压力很大。优化后，即使 10000 条数据，在滚动情况下的 fps 也能有 30 多，在非滚动情况下可以达到 60 满帧。
 
 之所以有这个差异，是因为虚拟滚动的实现方式：是只渲染视口内的 DOM。这样总共渲染的 DOM 数量就很少了，自然性能就会好很多。
@@ -561,9 +550,14 @@ export default {
 
 虚拟滚动组件也并非没有成本，因为它需要在滚动的过程中实时去计算，所以会有一定的 script 执行的成本。因此如果列表的数据量不是很大的情况，我们使用普通的滚动就足够了。
 
-总结
+### 总结
+
 通过这篇文章，我希望你能了解到 Vue.js 的九种性能优化技巧，并能运用到实际的开发项目中。除了上述技巧之外，还有懒加载图片、懒加载组件、异步组件等等常用的性能优化手段。
 
 在做性能优化前，我们需要分析性能的瓶颈在哪，才能因地制宜。另外，性能优化都需要数据支撑的，你在做任何性能优化前，需要先采集优化前的数据，这样优化后才能够通过数据对比看到优化的效果。
 
 希望你在日后的开发过程中，不再只满足于实现需求，写每一行代码的时候，都能思考它可能产生的性能方面的影响。
+
+### 原文链接
+
+[](https://mp.weixin.qq.com/s/7u3hHp4zT7aTQTvQ6JjM-w)
