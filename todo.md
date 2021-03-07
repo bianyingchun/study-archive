@@ -111,7 +111,9 @@ leetcode Top100
 ## 简历
 
 github
-https://github.com/geekcompany/ResumeSample
+https://github.com/geekcompany/ResumeSample/blob/master/web.md
+https://www.zhihu.com/question/23150301
+https://www.wondercv.com/cvs/dnkU8JEg/editor
 
 ### 复盘直播课笔记+截屏
 
