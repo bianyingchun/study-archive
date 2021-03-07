@@ -3,12 +3,19 @@
 [参考](https://github.com/lgwebdream/FE-Interview/issues/29)
 
 1. Promise 有三种状态：pending(进行中)、fulfilled(已成功)、rejected(已失败)
+
 2. Promise 对象接受一个回调函数作为参数, 该回调函数接受两个参数，分别是成功时的回调 resolve 和失败时的回调 reject；另外 resolve 的参数除了正常值以外， 还可能是一个 Promise 对象的实例；reject 的参数通常是一个 Error 对象的实例。
+
 3. then 方法返回一个新的 Promise 实例，并接收两个参数 onResolved(fulfilled 状态的回调)；onRejected(rejected 状态的回调，该参数可选)
+
 4. catch 方法返回一个新的 Promise 实例
+
 5. finally 方法不管 Promise 状态如何都会执行，该方法的回调函数不接受任何参数
+
 6. Promise.all()方法将多个 Promise 实例，包装成一个新的 Promise 实例，该方法接受一个由 Promise 对象组成的数组作为参数(Promise.all()方法的参数可以不是数组，但必须具有 Iterator 接口，且返回的每个成员都是 Promise 实例)，注意参数中只要有一个实例触发 catch 方法，都会触发 Promise.all()方法返回的新的实例的 catch 方法，如果参数中的某个实例本身调用了 catch 方法，将不会触发 Promise.all()方法返回的新实例的 catch 方法
+
 7. Promise.race()方法的参数与 Promise.all 方法一样，参数中的实例只要有一个率先改变状态就会将该实例的状态传给 Promise.race()方法，并将返回值作为 Promise.race()方法产生的 Promise 实例的返回值
+
 8. Promise.resolve()将现有对象转为 Promise 对象，
    1. 如果该方法的参数为一个 Promise 对象，Promise.resolve()将不做任何处理；
    2. 如果参数 thenable 对象(即具有 then 方法)，Promise.resolve()将该对象转为 Promise 对象并立即执行 then 方法；
@@ -19,13 +26,14 @@
 
 ### Promise 优点
 
-① 统一异步 API
+1. 统一异步 API
 Promise 的一个重要优点是它将逐渐被用作浏览器的异步 API ，统一现在各种各样的 API ，以及不兼容的模式和手法。
-②Promise 与事件对比
-和事件相比较， Promise 更适合处理一次性的结果。在结果计算出来之前或之后注册回调函数都是可以的，都可以拿到正确的值。 Promise 的这个优点很自然。但是，不能使用 Promise 处理多次触发的事件。链式处理是 Promise 的又一优点，但是事件却不能这样链式处理。
-③Promise 与回调对比
-解决了回调地狱的问题，将异步操作以同步操作的流程表达出来。
-④Promise 带来的额外好处是包含了更好的错误处理方式（包含了异常处理），并且写起来很轻松（因为可以重用一些同步的工具，比如 Array.prototype.map() ）。
+
+2. Promise 与事件对比
+  和事件相比较， Promise 更适合处理一次性的结果。在结果计算出来之前或之后注册回调函数都是可以的，都可以拿到正确的值。 Promise 的这个优点很自然。但是，不能使用 Promise 处理多次触发的事件。链式处理是 Promise 的又一优点，但是事件却不能这样链式处理。
+  ③Promise 与回调对比
+  解决了回调地狱的问题，将异步操作以同步操作的流程表达出来。
+  ④Promise 带来的额外好处是包含了更好的错误处理方式（包含了异常处理），并且写起来很轻松（因为可以重用一些同步的工具，比如 Array.prototype.map() ）。
 
 ### Promise 缺点
 
