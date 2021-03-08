@@ -5,7 +5,7 @@
 #### 技术栈
 微信小程序
 redux
-immtutable
+immutable
 
 ### 介绍
 每周cybo 报告。管理员可编辑发布cybo,查看切换监听的公众号，搜索公众号，文章，将公众号里的文章发布到cybo, 用户卡查看cybo 列表， 访问文章。
@@ -27,7 +27,6 @@ immtutable
 
 6. cybo-detail
   赛博详情，cybo 文章列表
-
 
 ### 核心组件vbar-box， 
 所有列表页以及文章页都使用到了这个组件
