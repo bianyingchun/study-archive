@@ -8,17 +8,17 @@ Animal.prototype.say = function () {
 };
 
 
-Function.prototype.bind = function(obj){
-  const args = Array.prototype.slice.call(arguments,1);//保留bind时的参数
+Function.prototype.bind = function (obj) {
+  const args = Array.prototype.slice.call(arguments, 1);//保留bind时的参数
   const that = this;
-  const bound =  function(){
-      const inArgs = Array.prototype.slice.call(arguments);//执行bind的函数时的参数
-      const newArgs = args.concat(inArgs);//组装参数
-      const bo = obj || this;
-      that.apply(bo,newArgs);//执行bind的函数
+  const bound = function () {
+    const inArgs = Array.prototype.slice.call(arguments);//执行bind的函数时的参数
+    const newArgs = args.concat(inArgs);//组装参数
+    const bo = obj || this;
+    that.apply(bo, newArgs);//执行bind的函数
   }
   //继承prototype--寄生组合式继承
-  function F(){};
+  function F() { };
   F.prototype = that.prototype;
   bound.prototype = new F();
   return bound;
@@ -38,3 +38,11 @@ if (
 ) {
   console.log("success");
 }
+
+
+timers
+i / o callbacks
+idle, prepare
+poll
+check
+close callbacks
