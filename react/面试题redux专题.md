@@ -29,7 +29,7 @@ export default thunk;
 ```
 
 ### React-redux 的理解以及原理，主要解决什么问题
-
+[](./redux是如何工作的.md)
 ### 对比 mobx 和 redux
 
 1. Redux 的编程范式是函数式的而 Mobx 是面向对象的；

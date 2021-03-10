@@ -42,6 +42,7 @@
 ![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdUbW1QMURYeVNJQ3AxTk1WaDY2Vzg3UjdmYmtCNkpWd0Z4d0lBMWw0ZjVJakpsSXBObG9HTGcvNjQw?x-oss-process=image/format,png)
 优化后
 ![图片](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9nbXZuNWJCYVcwOWFoaWNKSVd5Qm1iYjhMWlB0S2tteHdmaWNTbDh1dGlhaWN3MThBN1pqV3poeDBFZG94SnRWMWliMU9BbUg1OGtIMEx6aWM0cGNHVjVocjBndy82NDA?x-oss-process=image/format,png)
+
 对比这两张图我们可以看到优化后执行 script 的时间要明显少于优化前的，因此性能体验更好。
 
 那么为什么会有差异呢，我们来看优化前的组件，示例通过一个 heavy 函数模拟了一个耗时的任务，且这个函数在每次渲染的时候都会执行一次，所以每次组件的渲染都会消耗较长的时间执行 JavaScript。
@@ -397,7 +398,8 @@ Defer 的主要思想就是把一个组件的一次渲染拆成多次，它内�
 
 当你有渲染耗时的组件，使用 Deferred 做渐进式渲染是不错的注意，它能避免一次 render 由于 JS 执行时间过长导致渲染卡住的现象。
 
-Time slicing
+#### Time slicing
+
 第七个技巧，使用 Time slicing 时间片切割技术，你可以查看这个在线示例。
 
 优化前的代码如下：
