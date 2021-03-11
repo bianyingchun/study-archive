@@ -4,8 +4,8 @@
 
 3.~~child_process cluster~~
 
-4. nginx 配置  *** 
-   **\* 代理**
+4. nginx 配置 **\*
+   **\* 代理\*\*
    **\* 负载均衡**
    **\* 路由转发**
    **\* gzip 压缩**
@@ -14,7 +14,7 @@
 
 6. react 面试宝典 (拉勾)
 
-7. Vue 每日一题
+7. Vue 每日一题\
 
 8. 浏览器渲染机制
 
@@ -120,26 +120,27 @@ https://www.wondercv.com/cvs/dnkU8JEg/editor
 <!-- 3/4 -->
 
 1. http review
-2. webpack review 
+2. webpack review
 3. work 总结 工作内容 遇到的坑
 
 <!-- 3/5-->
+
 1. nodeJs review
 2. JS review
-<!-- 3/11 -->
-https://www.jianshu.com/p/15ac7393bc1f
-1. react hooks react-music 代码 vue3-music
-2. js 面试题
+   <!-- 3/11 -->
+   https://www.jianshu.com/p/15ac7393bc1f
+3. react hooks react-music 代码 vue3-music
+4. js 面试题
+5. 掘金面经
 <!-- 3/12 -->
-am:
-   1. js + vue + nodejs
-pm  
-  2. vue techtee
-  3. Nginx Linux Webpack http
+6. js + vue + nodejs
+7. vue techtee
+8. Nginx Linux Webpack http
 
 ### 项目代码
+
 react-music vue3-music techtree
 
 ### 容易忘的重点
-3. Nginx Linux Webpack ***
- 
+
+3. Nginx Linux Webpack \*\*\*
