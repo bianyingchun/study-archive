@@ -5,7 +5,9 @@
 Node.js 默认单进程运行，对于 32 位系统最高可以使用 512MB 内存，对于 64 位最高可以使用 1GB 内存。对于多核 CPU 的计算机来说，这样做效率很低，**因为只有一个核在运行，其他核都在闲置**。cluster 模块就是为了解决这个问题而提出的。
 
 cluster 模块允许设立一个主进程和若干个 worker 进程，由**主进程监控和协调 worker 进程的运行**。
-**worker 之间采用进程间通信交换消息**，cluster 模块内置一个负载均衡器，采用**Round-robin**算法协调各个 worker 进程之间的负载。
+
+**worker 之间采用进程间通信IPC交换消息**，**cluster 模块内置一个负载均衡器，采用Round-robin算法协调各个 worker 进程之间的负载**。
+
 运行时，所有新建立的连接都由主进程完成，然后主进程再把 TCP 连接分配给指定的 worker 进程。
 
 ### 简单使用
@@ -29,7 +31,9 @@ if (cluster.isMaster) {
 ```
 
 上面代码先判断当前进程是否为主进程（cluster.isMaster），如果是的，就按照 CPU 的核数，新建若干个 worker 进程；如果不是，说明当前进程是 worker 进程，则在该进程启动一个服务器程序。
+
 上面这段代码有一个缺点，就是一旦 work 进程挂了，主进程无法知道。
+
 为了解决这个问题，可以在主进程部署 online 事件和 exit 事件的监听函数。
 
 ```javascript
@@ -56,11 +60,12 @@ if (cluster.isMaster) {
     cluster.fork();
   });
 }
+
 ```
 
 ### api
 
-###### cluter
+###### cluster
 
 1. isMaster 属性返回一个布尔值，表示当前进程是否为主进程。这个属性由 process.env.NODE_UNIQUE_ID 决定，如果 process.env.NODE_UNIQUE_ID 为未定义，就表示该进程是主进程。
 2. isWorker 属性返回一个布尔值，表示当前进程是否为 work 进程。
@@ -164,7 +169,6 @@ function restartWorkers() {
 }
 ```
 
-1.5.2 实例
 下面是一个完整的实例，先是主进程的代码 master.js。
 
 ```javascript
@@ -225,7 +229,7 @@ $ kill -SIGHUP 10538
 
 主进程会连续两次新建一个 worker 进程，然后关闭所有其他 worker 进程，显示如下。
 
-```shell
+```sh
 Reloading...
 http://localhost:8080
 Reloading...
@@ -276,7 +280,7 @@ $ pm2 show <worker id>
 ```
 
 正确情况下，PM2 采用 fork 模式新建 worker 进程，即主进程 fork 自身，产生一个 worker 进程。
-pm2 reload 命令则会用 spawn 方式启动，即一个接一个启动 worker 进程，一个新的 worker 启动成功，再杀死一个旧的 worker 进程。
+**pm2 reload 命令则会用 spawn 方式启动，即一个接一个启动 worker 进程，一个新的 worker 启动成功，再杀死一个旧的 worker 进程**。
 采用这种方式，重新部署新版本时，服务器就不会中断服务。
 
 ```sh
@@ -295,3 +299,5 @@ process.on("message", function (msg) {
   }
 });
 ```
+
+http://nodejs.cn/api/cluster.html#cluster_event_online

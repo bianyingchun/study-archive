@@ -1,5 +1,5 @@
 [参考链接](https://blog.csdn.net/jasonzds/article/details/87559644)
-
+https://blog.csdn.net/chy555chy/article/details/52556318
 ### API
 
 1. spawn ： 子进程中执行的是**非 node 程序**，提供一组参数后，执行的结果以**流**的形式返回。
@@ -37,3 +37,4 @@ child.send("parent message");
 
 中断父子间通信的方式，可以通过在父进程中调用：
 child.disconnect()
+

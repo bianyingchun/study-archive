@@ -41,7 +41,7 @@ app.use(async (ctx, next) => {
 注意，开发者必须在 AJAX 请求中打开 withCredentials 属性。Access-Control-Allow-Origin 就不能设为星号，必须指定明确的、与请求网页一致的域名
 
 1. Access-Control-Expose-Headers
-   该字段可选。CORS 请求时，XMLHttpRequest 对象的 getResponseHeader()方法只能拿到 6 个基本字段：Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma。如果想拿到其他字段，就必须在 Access-Control-Expose-Headers 里面指定。
+该字段可选。CORS 请求时，XMLHttpRequest 对象的 getResponseHeader()方法只能拿到 6 个基本字段：Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma。如果想拿到其他字段，就必须在 Access-Control-Expose-Headers 里面指定。
 
 ### 非简单请求
 

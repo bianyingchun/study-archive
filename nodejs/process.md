@@ -22,6 +22,11 @@ process.ppid：当前进程对应的父进程
 process.cwd()：获取当前进程工作目录，
 process.platform：获取当前进程运行的操作系统平台
 process.uptime()：当前进程已运行时间，例如：pm2 守护进程的 uptime 值
-进程事件：process.on(‘uncaughtException’, cb) 捕获异常信息、process.on(‘exit’, cb）进程推出监听
-三个标准流：process.stdout 标准输出、process.stdin 标准输入、process.stderr 标准错误输出
+进程事件：
+process.on(‘uncaughtException’, cb) 捕获异常信息、
+process.on(‘exit’, cb）进程推出监听
+三个标准流：
+process.stdout 标准输出、
+process.stdin 标准输入、
+process.stderr 标准错误输出
 process.title 指定进程名称，有的时候需要给进程指定一个名称

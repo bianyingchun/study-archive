@@ -124,11 +124,21 @@ https://www.wondercv.com/cvs/dnkU8JEg/editor
 3. work 总结 工作内容 遇到的坑
 
 <!-- 3/5-->
-
 1. nodeJs review
 2. JS review
+<!-- 3/11 -->
+https://www.jianshu.com/p/15ac7393bc1f
+1. react hooks react-music 代码 vue3-music
+2. js 面试题
+<!-- 3/12 -->
+am:
+   1. js + vue + nodejs
+pm  
+  2. vue techtee
+  3. Nginx Linux Webpack http
 
-
+### 项目代码
+react-music vue3-music techtree
 
 ### 容易忘的重点
 3. Nginx Linux Webpack ***
