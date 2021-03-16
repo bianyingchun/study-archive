@@ -13,10 +13,13 @@
 
 - applyMiddleware.js
   中间件模块
+  
 - bindActionCreators.js
   用于将传入的 actionCreator 与 dispatch 方法相结合，揉成一个新的方法
+
 - combineReducers.js
   用于将多个  reducer 合并起来
+
 - compose.js
   用于把接收到的函数从右向左进行组合进行函数式编程
 

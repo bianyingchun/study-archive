@@ -1,4 +1,11 @@
 ### Redux 和 Vuex 的区别和共同思想
+都是基于flux的思想
+store和state是最基本的概念，VUEX没有做出改变。其实VUEX对整个框架思想并没有任何改变，只是某些内容变化了名称或者叫法，通过改名，以图在一些细节概念上有所区分。
+- **VUEX弱化了dispatch的存在感**。VUEX认为状态变更的触发是一次“提交”而已，而调用方式则是框架提供一个提交的commit API接口。
+- **VUEX取消了Redux中Action的概念**。不同于Redux认为状态变更必须是由一次"行为"触发，VUEX仅仅认为在任何时候触发状态变化只需要进行mutation即可。Redux的Action必须是一个对象，而VUEX认为只要传递必要的参数即可，形式不做要求。
+- **VUEX也弱化了Redux中的reducer的概念**。reducer在计算机领域语义应该是"规约"，在这里意思应该是根据旧的state和Action的传入参数，"规约"出新的state。在VUEX中，对应的是mutation，即"转变"，只是根据入参对旧state进行"转变"而已。
+
+总的来说，VUEX通过弱化概念，在任何东西都没做实质性削减的基础上，使得整套框架更易于理解了
 
 ### redux-saga 和 mobx
 
@@ -63,3 +70,8 @@ Redux 是 Flux 思想的一种体现
    不允许多个 saga 任务并行的执行，一旦接收到新的发起的 action，就会取消前面所有 fork 过的任务。
 
 ### state 是如何注入到组件的，从 reducer 到组件经历了什么样的过程
+
+### state 核心思想
+1. View 通过 Dispatch 派发 action
+2. Store 调用 Reducer，传入当前 state 和 action, Reducer 返新的 State
+3. State 一旦发生变化，调用监听函数，更新 view。

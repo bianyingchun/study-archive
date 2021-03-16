@@ -196,7 +196,7 @@ function myAsync(genF) {
       }
       if (next.done) {
         //完成就直接resolve
-        return resolve(next.value);
+      return resolve(next.value);
       }
       // 直接resolve当前的指针指向的对象然后继续执行下一个
       Promise.resolve(next.value)
