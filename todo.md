@@ -106,7 +106,6 @@ leetcode Top100
 
 ~~1. 基于全站缓存的前进刷新，后退刷新方案~~ 2. jwt token 方案 3. 排行榜方案 4. notify 方案
 
----
 
 ## 简历
 
@@ -164,6 +163,14 @@ https://www.jianshu.com/p/9d3ddaec9134
 3. javascript / 面试题未解决部分
 4. 直播课笔记+截屏
 5. promise.md
+
+>>
 ### 正则
 https://www.zhihu.com/question/48219401/answer/742444326
 ### leetcode top100
+
+###
+
+ppt 
+git 
+umi

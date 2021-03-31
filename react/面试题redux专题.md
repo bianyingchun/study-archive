@@ -60,6 +60,7 @@ Redux 是 Flux 思想的一种体现
 
 2. State 是只读的
    唯一改变 state 的方法就是触发 action，action 是一个用于描述已发生事件的普通对象。
+   
 3. 使用纯函数修改
    为了描述 action 如何改变 state tree ，你需要编写 reducers。
 
