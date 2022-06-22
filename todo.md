@@ -14,7 +14,7 @@
 
 6. react 面试宝典 (拉勾)
 
-7. Vue 每日一题\
+7. Vue 每日一题
 
 8. 浏览器渲染机制
 
@@ -123,9 +123,7 @@ react-music vue3-music techtree
 
 ### 容易忘的重点
 
- Nginx Linux Webpack \*\*\*
-
-
+Nginx Linux Webpack \*\*\*
 
 <!-- 3/4 -->
 
@@ -134,6 +132,7 @@ react-music vue3-music techtree
 3. work 总结 工作内容 遇到的坑
 
 <!-- 3/5-->
+
 1. nodeJs review
 2. JS review
    <!-- 3/11 -->
@@ -141,18 +140,18 @@ react-music vue3-music techtree
 4. js 面试题
 5. 掘金面经
 <!-- 3/12 -->
-6. js 
-7. vue 
+6. js
+7. vue
 8. nodejs
-7. vue techtee css
-8. 算法
-8. Nginx Linux Webpack http
-<!-- 
-手机相册截屏 vue3
-https://www.jianshu.com/p/9d3ddaec9134
- -->
-<!-- 双飞翼布局 /圣杯布局-->
-<!-- 响应式方案 -->
- <!-- vue2.0/vue3.0 diff算法， react diff算法, vue 性能优化 -->
- <!-- jwt -->
- <!-- 路由 -->
+9. vue techtee css
+10. 算法
+11. Nginx Linux Webpack http
+    <!--
+    手机相册截屏 vue3
+    https://www.jianshu.com/p/9d3ddaec9134
+     -->
+    <!-- 双飞翼布局 /圣杯布局-->
+    <!-- 响应式方案 -->
+     <!-- vue2.0/vue3.0 diff算法， react diff算法, vue 性能优化 -->
+     <!-- jwt -->
+     <!-- 路由 -->

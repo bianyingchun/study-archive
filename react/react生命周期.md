@@ -33,11 +33,11 @@ constuctor(props) {
 只要父级组件重新渲染时，getDerivedStateFromProps 就会被调用。
 
 ```javascript
-static getDerivedStateFromProps(props, state) {
-    if (props.currentRow !== state.lastRow) {
+static getDerivedStateFromProps(newProps, prevState) {
+    if (newProps.currentRow !== prevState.lastRow) {
       return {
-        isScrollingDown: props.currentRow > state.lastRow,
-        lastRow: props.currentRow,
+        isScrollingDown: newProps.currentRow > prevState.lastRow,
+        lastRow: newProps.currentRow,
       };
     }
 
@@ -73,6 +73,8 @@ componentDidMount 主要用于组件加载完成时做某些操作，比如发�
 该函数已被标记弃用，因为其功能可被函数 getDerivedStateFromProps 所替代。
 
 另外，当 getDerivedStateFromProps 存在时，UNSAFE_componentWillReceiveProps 不会被调用。
+
+componentWillReceiveProps 并不是由 props 的变化触发的，而是由父组件的更新触发的，如果父组件导致组件重新渲染，即使 props 没有更改，也会调用此方法
 
 #### 2. getDerivedStateFromProps
 
@@ -197,3 +199,13 @@ Fiber 架构的重要特征就是可以被打断的异步渲染模式。但这�
 
 1. [如何避免生命周期中的坑？](https://kaiwu.lagou.com/course/courseInfo.htm?courseId=566#/detail/pc?id=5793)
 2. [为什么 React 16 要更改组件的生命周期？（下）](https://kaiwu.lagou.com/course/courseInfo.htm?courseId=510#/detail/pc?id=4852)
+
+3. 管理后台分时报表优化以及公告管理上线
+
+4. 报表模板在线编辑工具开发：
+
+   1. 集成 x-data-spreadsheet 插件，封装基础表格组件 2. 支持中文：修改 x-data-spreadsheet 源码 local.js 3. 支持单元格不自动计算表达式值：修改源码，通过 data.settings.ignoreFormula 控制是否计算表达式
+
+   2. 包装基础表格组件，实现复杂编辑功能，支持公式编辑，高亮显示变量。
+
+   3. 抽离 excel 导入函数

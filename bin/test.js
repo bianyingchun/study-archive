@@ -1,97 +1,46 @@
-import { reactive, createApp, App, h } from 'vue'
-import Comp from './index.vue'
-
-const state = reactive({
-    show: false,
-    text: ''
-})
-
-function hide() {
-    state.show = false
-}
-
-export function popup(text = '') {
-    return new Promise < void> (resolve => {
-        state.text = text
-        state.show = true
-        function onCancel() {
-            //   reject()
-            hide()
-        }
-        function onEnsure() {
-            resolve()
-            hide()
-        }
-        const popupInstance = createApp({
-            setup() {
-                return () =>
-                    h(Comp, {
-                        show: state.show,
-                        text: state.text,
-                        hide,
-                        onCancel,
-                        onEnsure
-                    })
-            }
+function permutate(str) {
+    var result = []
+    if (str.length === 1) return [str]
+    for (let i = 0; i < str.length; i++) {
+        const left = str[i]
+        const rest = str.slice(0, i) + str.slice(i + 1)
+        const restResult = permutate(rest)
+        restResult.forEach(item => {
+            result.forEach(left + item)
         })
-        const el = document.createElement('div')
-        document.body.appendChild(el)
-        popupInstance.mount(el)
-    })
+    }
+    return result;
 }
 
-export default {
-    install: (app: App) => {
-        app.config.globalProperties.$popup = popup
-        app.provide('popup', popup)
+function patition(list, low, high) {
+    let pivokey = list[low]
+    while (low < high) {
+        while (low < high && list[high] >= pivokey) high--
+        list[low] = list[high]
+        while (low < high && list[low] <= pivokey) low++
+        list[high] = list[low]
+    }
+    list[low] = pivokey
+    return low
+}
+
+function quickSort(arr, low = 0, high = arr.length - 1) {
+    if (low < high) {
+        const pivokey = patition(arr, low, high)
+        quickSort(arr, low, pivokey - 1)
+        quickSort(arr, pivokey + 1, high)
     }
 }
-// vue2.x 写法
-// import Vue from "vue";
-const Vue = require("vue");
-import PopupTemplate from "./index.vue";
 
-const PopupConstructor = Vue.extend(PopupTemplate); //返回一个实例创建的构造器，但实例构造器需要进行挂载到页面中
+BubbuleSort(arr) {
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr.length - 1 - i; j++) {
+            if (arr[j] > arr[j + 1]) {
+                const temp = arr[j + 1]
+                arr[j + 1] = arr[j]
+                arr[j] = temp;
 
-let Popup = function (text) {
-    return new Promise((resolve, reject) => {
-        //返回一个promise，进行异步操作，成功时返回，失败时返回
-        let popupDom = new PopupConstructor({
-            el: document.createElement("div"),
-            data: {
-                showFlag: true,
-                text,
-            },
-        });
-
-        //在body中动态创建一个div元素，之后此div将会替换成整个vue文件的内容
-        //此时的confirmDom通俗讲就是相当于是整个组件对象，通过对象调用属性的方法来进行组件中数据的使用
-        //可以通过$el属性来访问创建的组件实例
-        document.body.appendChild(popupDom.$el);
-        //此时进行创建组件的逻辑处理
-        // confirmDom.popupDom=text      
-        //将需要传入的文本内容传给组件实例
-        popupDom.ensure = () => {
-            //箭头函数，在（）和{}之间增加=>,且去掉function
-            resolve(); //正确时返回的操作
-            popupDom.showFlag = false;
-        };
-        popupDom.cancel = () => {
-            reject(); //失败时返回的操作
-            popupDom.showFlag = false;
-        };
-    });
-};
-
-//将逻辑函数进行导出和暴露
-const popUpPlugin = {
-    install: function (Vue) {
-        Vue.prototype.$popup = Popup;
-        // Vue.popup = Popup;
-        window.util = window.util ? window.util : {};
-        window.util.popup = Popup;
-    },
-};
-
-export default popUpPlugin;
-//
+            }
+        }
+    }
+}

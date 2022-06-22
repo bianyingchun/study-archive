@@ -165,7 +165,7 @@ server{
 #### 为什么要 Nginx 反向代理
 
 2. 负载均衡。
-负载均衡就是一个网站的内容被部署在若干服务器上，可以把这些机子看成一个集群，那 Nginx 可以将接收到的客户端请求“均匀地”分配到这个集群中所有的服务器上，从而实现服务器压力的平均分配，也叫负载均衡。
+   负载均衡就是一个网站的内容被部署在若干服务器上，可以把这些机子看成一个集群，那 Nginx 可以将接收到的客户端请求“均匀地”分配到这个集群中所有的服务器上，从而实现服务器压力的平均分配，也叫负载均衡。
 
 ```shell
 server{
@@ -298,5 +298,21 @@ process.env.GENERATE_SOURCEMAP = false;
 6. splitChuncks 抽取公共代码
 
 ## 参考文章
+
 (https://juejin.cn/post/6844904093463347208)
 
+server{
+listen 80;
+server_name blog.bianyc.xyz;
+location /admin{
+alias /usr/share/nginx/html/blog-admin;
+index index.html;
+try_files $uri $uri/ /admin/index.html;
+}
+location ~^/api/{
+proxy_pass http://127.0.0.1:3030;
+}
+location /{
+proxy_pass http://127.0.0.1:8080;
+}
+}

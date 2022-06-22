@@ -7,7 +7,7 @@
 ### HTTPS
 
 HTTPS 指的是超文本传输安全协议，HTTPS 是基于 HTTP 协议的，不过它会使用 TLS/SSL 来对数据加密。使用 TLS/ SSL 协议，所有的信息都是加密的，第三方没有办法窃听。并且它提供了一种校验机制，信息一旦被篡改，通信的双方会立刻发现。它还配备了身份证书，防止身份被冒充的情况出现。
-HTTPS = HTTP + SSL（安全套接层）/TLS(安全传输协议)
+HTTPS = HTTP + SSL（安全套接层）/TLS(安全传输协议 Transport Layer Security)
 HTTPS = HTTP +加密+认证+完整性保护
 
 ### SSL/TLS 协议运行机制
