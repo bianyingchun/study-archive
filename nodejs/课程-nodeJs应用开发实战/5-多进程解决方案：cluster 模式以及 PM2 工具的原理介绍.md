@@ -230,3 +230,4 @@ client-(RPC)->Daemon-->God.clusterMode-->cluster.fork
 综上所述，**PM2 通过命令行，使用 RPC 建立 Client 与 Daemon 进程之间的通信，通过 RPC 通信方式，调用 God，从而应用 Node.js 的 cluster.fork 创建子进程的**
 
 [https://zhuanlan.zhihu.com/p/77733656](https://zhuanlan.zhihu.com/p/77733656)
+

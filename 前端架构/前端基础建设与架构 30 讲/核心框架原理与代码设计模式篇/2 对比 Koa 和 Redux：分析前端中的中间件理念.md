@@ -259,3 +259,4 @@ function applyMiddleware(...middlewares) {
 2. 第二个中间件没有调用 next(action)，则执行顺序为：中间件 1 befoe next → 中间件 2 逻辑 → 中间件 1 after next，注意此时中间件 3 没有被执行。
 
 3. 第二个中间件异步调用 next(action)，其他中间件均是正常同步调用 nextt(action)，则执行顺序为：中间件 1 before next → 中间件 2 同步代码部分 → 中间件 1 after next → 中间件 2 异步代码部分 before next → 中间件 3 before next → dispatch 方法调用 → 中间件 3 after next → 中间件 2 异步代码部分 after next。
+

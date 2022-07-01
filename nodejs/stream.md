@@ -1,4 +1,5 @@
 [原文链接](https://zhuanlan.zhihu.com/p/44809689)
+https://www.jianshu.com/p/bfd5abc106ed
 
 ### 理解流
 
@@ -372,3 +373,5 @@ stream.on("error", (err) => {
 
 [nodejs stream 基础篇](https://zhuanlan.zhihu.com/p/21681090)
 [nodejs stream 进阶篇](https://cloud.tencent.com/developer/article/1058118)
+https://www.jianshu.com/p/bfd5abc106ed
+https://zhuanlan.zhihu.com/p/36728655

@@ -162,3 +162,119 @@ button 没有任何子节点，所以此时可以返回，并标志 button 处�
 
 1. 饿死：正在实验中的方案是重用，也就是说高优先级的操作如果没有修改低优先级操作已经完成的节点，那么这部分工作是可以重用的。
 2. 一次渲染可能会调用多次生命周期函数
+
+### 补充
+
+http://www.ayqy.net/blog/dive-into-react-fiber/#articleHeader10
+React 实现上分为 2 部分：
+
+reconciler 寻找某时刻前后两版 UI 的差异。包括之前的 Stack reconciler 与现在的 Fiber reconciler
+
+renderer 插件式的，平台相关的部分。包括 React DOM、React Native、React ART、ReactHardware、ReactAframe、React-pdf、ReactThreeRenderer、ReactBlessed 等等
+
+fiber 是对对 reconciler 的彻底改造
+
+#### 1. 关键特性
+
+渲染/更新过程（递归 diff）拆分成一系列小任务，每次检查树上的一小部分，做完看是否还有时间继续下一个任务，有的话继续，没有的话把自己挂起，主线程不忙的时候再继续
+
+1.  增量渲染（把渲染任务拆分成块，匀到多帧）
+
+2.  更新时能够暂停，终止，复用渲染任务
+
+3.  给不同类型的更新赋予优先级
+
+4.  并发方面新的基础能力
+
+#### 2. 实例
+
+1. effect
+   每个 workInProgress tree 节点上都有一个 effect list
+   用来存放 diff 结果
+   当前节点更新完毕会向上 merge effect list（queue 收集 diff 结果）
+
+---
+
+2. workInProgress
+   workInProgress tree 是 reconcile 过程中从 fiber tree 建立的当前进度快照，用于断点恢复
+
+---
+
+3. fiber fiberNode 链表
+   fiber tree 与 vDOM tree 类似，用来描述增量更新所需的上下文信息
+
+4. currentTree
+   反映了当前用于渲染 UI 的应用程序的状态。
+
+#### reconciler
+
+##### 1. render （可以是异步）
+
+（可中断）render/reconciliation 通过构造 workInProgress tree 得出 change
+
+以 fiber tree 为蓝本，把每个 fiber 作为一个工作单元，自顶向下逐节点构造 workInProgress tree（构建中的新 fiber tree）
+
+具体过程如下（以组件节点为例）：
+
+1. 如果当前节点不需要更新，直接把子节点 clone 过来，跳到 5；要更新的话打个 tag
+
+2. 更新当前节点状态（props, state, context 等）
+
+3. 调用 shouldComponentUpdate()，false 的话，跳到 5
+
+4. 调用 render()获得新的子节点，并为子节点创建 fiber（创建过程会尽量复用现有 fiber，子节点增删也发生在这里）
+
+5. 如果没有产生 child fiber，该工作单元结束，把 effect list 归并到 return，并把当前节点的 sibling 作为下一个工作单元；否则把 child 作为下一个工作单元
+
+6. 如果没有剩余可用时间了，等到下一次主线程空闲时才开始下一个工作单元；否则，立即开始做
+
+7. 如果没有下一个工作单元了（回到了 workInProgress tree 的根节点），第 1 阶段结束，进入 pendingCommit 状态
+
+实际上是 1-6 的工作循环，7 是出口，工作循环每次只做一件事，做完看要不要喘口气。工作循环结束时，workInProgress tree 的根节点身上的 effect list 就是收集到的所有 side effect（因为每做完一个都向上归并）
+
+所以，构建 workInProgress tree 的过程就是 diff 的过程，通过 requestIdleCallback 来调度执行一组任务，每完成一个任务后回来看看有没有插队的（更紧急的），每完成一组任务，把时间控制权交还给主线程，直到下一次 requestIdleCallback 回调再继续构建 workInProgress tree
+
+##### 2. commit (同步，一气呵成，不能)
+
+commit 应用这些 DOM change
+
+1. 处理effect list（包括3种处理：更新DOM树、调用组件生命周期函数以及更新ref等内部状态）
+2. 出对结束，第2阶段结束，所有更新都commit到DOM树上了
+
+#### fiber tree与workInProgress tree
+**双缓冲技术**（double buffering），就像redux里的nextListeners，以fiber tree为主，workInProgress tree为辅
+
+双缓冲具体指的是workInProgress tree构造完毕，得到的就是新的fiber tree，然后喜新厌旧（把current指针指向workInProgress tree，丢掉旧的fiber tree）就好了
+
+这样做的好处：
+
++ 能够复用内部对象（fiber）
+
++ 节省内存分配、GC的时间开销
+
+每个fiber上都有个**alternate**属性，也指向一个fiber，创建workInProgress节点时优先取alternate，没有的话就创建一个：
+
+#### 六.优先级策略
+每个工作单元运行时有6种优先级：
+
+1. synchronous 与之前的Stack reconciler操作一样，同步执行
+
+2. task 在next tick之前执行
+
+3. animation 下一帧之前执行
+
+4. high 在不久的将来立即执行
+
+5. low 稍微延迟（100-200ms）执行也没关系
+
+6. offscreen 下一次render时或scroll时才执行
+
+synchronous首屏（首次渲染）用，要求尽量快，不管会不会阻塞UI线程。animation通过requestAnimationFrame来调度，这样在下一帧就能立即开始动画过程；后3个都是由requestIdleCallback回调执行的；offscreen指的是当前隐藏的、屏幕外的（看不见的）元素
+
+高优先级的比如键盘输入（希望立即得到反馈），低优先级的比如网络请求，让评论显示出来等等。另外，紧急的事件允许插队
+
+这样的优先级机制存在2个问题：
+
++ 生命周期函数怎么执行（可能被频频中断）：触发顺序、次数没有保证了
+
++ starvation（低优先级饿死）：如果高优先级任务很多，那么低优先级任务根本没机会执行（就饿死了）
