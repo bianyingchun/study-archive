@@ -127,7 +127,7 @@ Koa 的中间件机制被社区形象地总结为**洋葱模型**；
 
 所谓洋葱模型，就是指每一个 Koa 中间件都是一层洋葱圈，它即可以掌管请求进入，也可以掌管响应返回。换句话说：**外层的中间件可以影响内层的请求和响应阶段，内层的中间件只能影响外层的响应阶段**。
 
-dispatch(n)对应第 n 个中间件的执行，第 n 个中间件可以通过 await next()来执行下一个中间件，同时在最后一个中间件执行完成后，依然有恢复执行的能力。即，通过洋葱模型，await next()控制调用 “下游”中间件，直到 “下游”没有中间件且堆栈执行完毕，最终流回“上游”中间件。这种方式有个优点，特别是对于日志记录以及错误处理等需要非常友好。
+dispatch(n)对应第 n 个中间件的执行，第 n 个中间件可以通过 **await next()来执行下一个中间件，同时在最后一个中间件执行完成后，依然有恢复执行的能力**。即，通过洋葱模型，await next()控制调用 “下游”中间件，直到 “下游”没有中间件且堆栈执行完毕，最终流回“上游”中间件。这种方式有个优点，特别是对于日志记录以及错误处理等需要非常友好。
 
 这里我们稍微做一下扩展，引申出 Koa v1 版本中中间件的实现，Koa1 的中间件实现利用了 Generator 函数 + co 库（一种基于 Promise 的 Generator 函数流程管理工具），来实现协程运行。**本质上，Koa v1 版本中间件和 Koa v2 版本中间件思想是类似的，只不过 Koa v2 主要是用了 Async/Await 来替换 Generator 函数 + co 库，整体实现更加巧妙，代码更加优雅、简易**。
 
@@ -258,5 +258,5 @@ function applyMiddleware(...middlewares) {
 
 2. 第二个中间件没有调用 next(action)，则执行顺序为：中间件 1 befoe next → 中间件 2 逻辑 → 中间件 1 after next，注意此时中间件 3 没有被执行。
 
-3. 第二个中间件异步调用 next(action)，其他中间件均是正常同步调用 nextt(action)，则执行顺序为：中间件 1 before next → 中间件 2 同步代码部分 → 中间件 1 after next → 中间件 2 异步代码部分 before next → 中间件 3 before next → dispatch 方法调用 → 中间件 3 after next → 中间件 2 异步代码部分 after next。
+3. 第二个中间件异步调用 next(action)，其他中间件均是正常同步调用 next(action)，则执行顺序为：中间件 1 before next → 中间件 2 同步代码部分 → 中间件 1 after next → 中间件 2 异步代码部分 before next → 中间件 3 before next → dispatch 方法调用 → 中间件 3 after next → 中间件 2 异步代码部分 after next。
 

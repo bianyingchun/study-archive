@@ -48,7 +48,7 @@ optionalDependencies 可选依赖
 它们起到的作用和声明意义是各不相同的。下面我们来具体介绍一下:
 
 - dependencies 表示**项目依赖，这些依赖都会成为你的线上生产环境中的代码组成的部分**。当 它关联到 npm 包被下载的时候, dependencies 下的模块也会作为依赖, 一起被下载。
-- devDependencies 表示**开发依赖,** 不会被自动下载的。因为 devDependencies 一般是用于开发阶段起作用或是只能用于开发环境中被用到的。 比如说我们用到的 Webpack，预处理器 babel-loader、scss-loader，测试工具 E2E 等， 这些都相当于是辅助的工具包, 无需在生产环境被使用到的。
+- devDependencies 表示**开发依赖** 不会被自动下载的。因为 devDependencies 一般是用于开发阶段起作用或是只能用于开发环境中被用到的。 比如说我们用到的 Webpack，预处理器 babel-loader、scss-loader，测试工具 E2E 等， 这些都相当于是辅助的工具包, 无需在生产环境被使用到的。
 
   这里有一点还是需要我去啰嗦一下的，并不是只有在 dependencies 中的模块才会被一起打包, 而是在 devDependencies 中的依赖一定不会被打包的。 **实际上, 依赖是否是被打包,完全是取决你的项目里的是否是被引入了该模块。**
 

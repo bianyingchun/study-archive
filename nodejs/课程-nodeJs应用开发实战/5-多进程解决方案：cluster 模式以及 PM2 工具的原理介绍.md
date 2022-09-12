@@ -9,7 +9,7 @@ Node.js 主线程是单线程的，如果我们使用 node app.js 方式运行�
 
 ## cluster 模式
 
-cluster 模式其实就是我们上面图 1 所介绍的模式，一个主进程和多个子进程，从而形成一个集群的概念。我们先来看看 cluster 模式的应用例子。
+cluster 模式其实就是我们上面所介绍的模式 1，一个主进程和多个子进程，从而形成一个集群的概念。我们先来看看 cluster 模式的应用例子。
 
 ### 应用
 
@@ -196,7 +196,7 @@ obj.once("listening", () => {
 
 原因是 master 进程内部启动了一个 TCP 服务器，而真正监听端口的只有这个服务器，当来自前端的请求触发服务器的 connection 事件后，master 会将对应的 socket 句柄发送给子进程。
 
-### 总结
+### 小结
 
 以上就是 cluster 的原理，总结一下就是**cluster 模块应用 child_process 来创建子进程，子进程通过复写掉 cluster.\_getServer 方法，从而在 server.listen 来保证只有主进程监听端口，主子进程通过 IPC 进行通信，其次主进程根据平台或者协议不同，应用两种不同模块（round_robin_handle.js 和 shared_handle.js）进行请求分发给子进程处理。**
 
@@ -204,7 +204,7 @@ obj.once("listening", () => {
 
 ### 进程创建管理的原理
 
-![PM2 源码多进程创建方式](./pm2%20%E6%BA%90%E7%A0%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA.png)
+![PM2 源码多进程创建方式](http://cdn.bianyc.xyz/pm2%20%E6%BA%90%E7%A0%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA.png)
 
 这一方式涉及五个模块文件。
 
@@ -228,6 +228,3 @@ client-(RPC)->Daemon-->God.clusterMode-->cluster.fork
 - 在 God 中最终会调用 God 文件夹下的 ClusterMode 模块，应用 Node.js 的 cluster.fork 创建子进程，这样就完成了整个启动过程。
 
 综上所述，**PM2 通过命令行，使用 RPC 建立 Client 与 Daemon 进程之间的通信，通过 RPC 通信方式，调用 God，从而应用 Node.js 的 cluster.fork 创建子进程的**
-
-[https://zhuanlan.zhihu.com/p/77733656](https://zhuanlan.zhihu.com/p/77733656)
-

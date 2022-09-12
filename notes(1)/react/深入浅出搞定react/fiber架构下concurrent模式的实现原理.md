@@ -327,9 +327,30 @@ unstable_scheduleCallback 的主要工作是针对当前任务创建一个 task�
 
 因此 **requestHostCallback 发起的“即时任务”最早也要等到下一次事件循环才能够执行。“即时”仅仅意味它相对于“延时任务”来说，不需要等待指定的时间间隔，并不意味着同步调用**。
 
-#### react 不使用 requestIdleCallback 的原因：
+#### 为什么选择 messageChannel
 
-1. 兼容性，对浏览器版本要求高。
-2. 最重要的一点。在空闲状态下，requestIdleCallback(callback) 回调函数的执行间隔是 50ms（W3C 规定），也就是 20FPS，1 秒内执行 20 次，肯定是不行的。
+https://juejin.cn/post/6953804914715803678#heading-4
+
+React Scheduler 使用 MessageChannel 的原因为：生成宏任务，实现：
+
+- 将主线程还给浏览器，以便浏览器更新页面。
+- 浏览器更新页面后继续执行未完成的任务。
+
+##### 为什么不使用微任务呢？
+
+微任务将在页面更新前全部执行完，所以达不到「将主线程还给浏览器」的目的。
+
+##### 为什么不使用 setTimeout(fn, 0) 呢？
+
+递归的 setTimeout() 调用会使调用间隔变为 4ms，导致浪费了 4ms。
+
+##### 为什么不使用 rAF() 呢？
+
+- 如果上次任务调度不是 rAF() 触发的，将导致在当前帧更新前进行两次任务调度。例如直接执行 scheduler.scheduleTask()
+- 页面更新的时间不确定，如果浏览器间隔了 10ms 才更新页面，那么这 10ms 就浪费了。
+
+#### 不使用requestIdleCallback 的原因：
+1、兼容性，对浏览器版本要求高。
+2、最重要的一点。在空闲状态下，requestIdleCallback(callback) 回调函数的执行间隔是 50ms（W3C规定），也就是 20FPS，1秒内执行20次，肯定是不行的。
 
 那么什么是空闲状态？也就 UI 界面没有发生更新，如果有动画啥的，那就是交互状态，当 UI 界面处于交互状态下，requestIdleCallback 就正常的是在 一帧渲染后执行回调函数(前提是一帧渲染后没有主线程没其他任务了)。

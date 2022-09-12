@@ -10,7 +10,7 @@
 5. 设计和实现了消息系统，根据消息类型分成提醒、系统公告、私信，用户可配置订阅规则决定哪些消息可以收到。消息的获取方式：提醒和系统公告采取拉取 pull 的方式，私信采取推 push 的方式，目前项目中私信功能暂未开发。
 6. 项目中多处需要评论功能，设计和实现了一套评论系统，合并了评论表和回复表，采用树形结构。可以实现对不同主体的评论和回复。
 7. 利用 Redis 和 mongodb 实现了排行榜功能，支持不同主体的总榜以及周榜和月榜此类周期榜单，如用户月榜，专辑周榜。核心是利用了 redis 的 Sorted Sets 来保存分数，可以做到自动排序，同时通过 node-schedule 开启定时任务，定期清空 redis，生成榜单写入到 mongodb。
-8. 使用 pm2 配合 nginx 实现自动化部署，可以做到性能监控，自动重启，和负载监控，大大简化了部署流程，也便于管理。
+8. pm2 结合 nginx 实现了自动化远程部署。
 9. 编写数据库备份和恢复脚本，利用 crontab 开启定时备份任务，定期将 mongodb 数据库备份到本地和阿里云 OSS，并且可以做到数据库恢复。
 
 #### 少儿社问答系统
@@ -53,7 +53,17 @@
 2. 封装了上传文件到七牛云模块。
 3. 后端集成了 NeteaseCloudMusic nodeJs API，为博客的音乐播放器提供数据支持，通过反向代理请求 Bing 提供壁纸数据。
 4. 使用 marked 和 highlight.js 解析 markDown，实现代码高亮，并且自定义 marked 渲染方式，实现点击图片以模态窗方式呈现等功能。
-5. 利用 PM2 和 nginx 实现了自动化远程部署。
+
+高仿网易云音乐
+项目架构：Vite + Vue3 + Pinia + TypeScript
+
+1. 实现了播放器、排行榜、歌单、用户、搜索、歌手等主要模块。
+2. 规范 scss 编码规则，并通过 css 变量和 sass mixin 的结合，实现了明暗主题的切换。
+3. 纯 composition Api 开发，并使用 Pinia 状态管理工具，以更好的支持 TypeScript，简化 api 使用。
+4. 封装了多个公共 hooks,以实现逻辑的复用，如 useLoadMore 滚动加载更多，useNavSwiper 封装轮播图插件 swiper.js，useComment 评论列表等等
+5. 抽离了核心播放器模块 usePlayer，实现了列表播放、插入歌曲
+   切换歌曲、从播放列表中删除歌曲、清空播放列表、切换播放模式、歌词同步、调整播放进度等功能
+6. 设计实现了全局单列组件：提示信息 toast，弹框 popup 等
 
 #### 专业技能
 
@@ -74,3 +84,5 @@
 8. 熟悉 Vue3.0 Composition API，并且使用 Vue3.0 开发过一个完整项目。
 9. 掌握 redis 的基本使用
    git remote set-url origin https://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@github.com/bianyingchun/study-archive
+
+

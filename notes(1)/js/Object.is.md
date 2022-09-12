@@ -12,7 +12,7 @@ if (!Object.is) {
       // 1/-0 -Infinity
       return x != 0 || 1 / x == 1 / y;
     } else {
-      x !== x && y !== y;
+      return x !== x && y !== y;
     }
   };
 }

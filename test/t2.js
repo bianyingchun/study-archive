@@ -1,55 +1,110 @@
-class Solution {
-    public int maxProfit(int[] prices) {
-        int n = prices.length;
-        if (n <= 1) return 0;
+const priority = {
+  "-": 1,
+  "+": 1,
+  "*": 2,
+  "/": 2,
+};
 
-
-        //，
-        //
-        //
-        //
-        //
-        //
-        int[][] dp = new int[n][3];
-        dp[0][0] = 0;
-        dp[0][1] = -1 * prices[0];
-        dp[0][2] = 0;
-
-
-
-        for (int i = 1; i < n; i++) {//从[1]...[n-1]
-            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][2]);
-            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i]);
-            dp[i][2] = dp[i - 1][1] + prices[i];
-
+var calculate = function (s) {
+  s = s.replaceAll(" ", "");
+  const nums = [0];
+  const ops = [];
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (c === "(") {
+      ops.push(c);
+    } else if (c === ")") {
+      while (ops.length) {
+        if (ops[ops.length - 1] !== "(") {
+          calc(nums, ops);
+        } else {
+          ops.pop();
+          break;
         }
+      }
+    } else if (!isNaN(c)) {
+      let num = c;
+      let j = i + 1;
+      while (j < s.length && !isNaN(s[j])) {
+        num += s[j++];
+      }
 
-
-
-
-        return Math.max(dp[n - 1][0], dp[n - 1][2]);
-
-
-
-
+      console.log(num);
+      nums.push(+num);
+      i = j - 1;
+    } else {
+      if (i > 0 && (s[i - 1] == "(" || s[i - 1] == "+" || s[i - 1] == "-")) {
+        nums.push(0);
+      }
+      while (ops.length && ops[ops.length - 1] !== "(") {
+        const prev = ops[ops.length - 1];
+        if (priority[prev] >= priority[c]) {
+          calc(nums, ops);
+        } else {
+          break;
+        }
+      }
+      ops.push(c);
     }
+  }
+  console.log(nums, ops);
+  while (ops.length) {
+    calc(nums, ops);
+  }
+  return nums[nums.length - 1];
+};
+
+function calc(nums, ops) {
+  if (nums.length < 2 || !ops.length) return;
+  const b = nums.pop(),
+    a = nums.pop();
+  const op = ops.pop();
+  let ans = 0;
+  if (op === "+") {
+    ans = a + b;
+  } else if (op === "-") {
+    ans = a - b;
+  } else if (op === "/") {
+    ans = a / b;
+  } else if (op === "*") {
+    ans = a * b;
+  }
+  nums.push(ans);
 }
 
-/**
- * @param {number[]} prices
- * @return {number}
- */
-var maxProfit = function (prices) {
-    const dp = new Array(prices.length).fill(new Array(4));
-    dp[0][0] = 0;//不持有股票，没卖出的
-    dp[0][1] = 0;//不持有股票，卖出去了
-    dp[0][2] = -1 * prices[0];//持有股票，今天买入；
-    dp[0][3] = -1 * prices[0];//持有股票，非今天买入的；
-    for (let i = 1; i < prices.length; i++) {
-        dp[i][0] = max(dp[i - 1][0], dp[i - 1][1]);//前一天不持有股票的两种情况的最大值
-        dp[i][1] = max(dp[i - 1][2], dp[i - 1][3]) + prices[i];//今天卖出股票，来着前一天持有股票的最大值+pr
-        dp[i][2] = dp[i - 1][0] - prices[i];//今天买入股票，这前一天一定没有卖出股票
-        dp[i][3] = max(dp[i - 1][2], dp[i - 1][3]);//今天没买股票，却持有股票，前一天继承来的,有两种情况
+const res = calculate("(4+3) * (2+1)");
+console.log("res", res);
+
+var nextGreaterElement = function (n) {
+  const str = (n + "").split("");
+  let j = str.length - 2;
+  if (str.length < 2) return -1;
+  while (j >= 0 && str[j] >= str[j + 1]) {
+    j--;
+  }
+  let k = str.length - 1;
+  if (j >= 0) {
+    while (k >= 0 && str[j] >= str[k]) {
+      k--;
     }
-    return max(dp[prices.length - 1][0], dp[prices.length - 1][1]);
+    const t = str[j];
+    str[j] = str[k];
+    str[k] = t;
+  }
+  reverse(str, j + 1, str.length - 1);
+  const num = +str.join("");
+  return num <= n || num > Math.pow(2, 32) ? -1 : num;
 };
+
+function reverse(arr = [], start, end) {
+  while (start < end) {
+    const t = arr[end];
+    arr[end] = arr[start];
+    arr[start] = t;
+    start++;
+    end--;
+  }
+}
+
+const a = nextGreaterElement(21);
+console.log(a);

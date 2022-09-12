@@ -46,8 +46,10 @@
 ```
 
 - 有了 defer 属性，浏览器会立即下载相应的脚本 example1.js 和 example2.js，在下载的过程中页面的处理不会停止，等到文档解析完成才会执行这两个脚本。
-  HTML5 规范要求脚本按照它们出现的先后顺序执行，因此第一个延迟脚本会先于第二个延迟脚本执行，而这两个脚本会先于 DOMContentLoaded 事件执行。
-  **在现实当中，延迟脚本并不一定会按照顺序执行，也不一定会在 DOMContentLoaded 事件触发前执行，因此最好只包含一个延迟脚本。**
+
+HTML5 规范要求脚本按照它们出现的先后顺序执行，因此第一个延迟脚本会先于第二个延迟脚本执行，而这两个脚本会先于 DOMContentLoaded 事件执行。
+
+**在现实当中，延迟脚本并不一定会按照顺序执行，也不一定会在 DOMContentLoaded 事件触发前执行，因此最好只包含一个延迟脚本。**
 
 <script defer src="example1.js"></script>
 <script defer src="example2.js"></script>

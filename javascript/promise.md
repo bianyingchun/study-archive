@@ -1,3 +1,25 @@
+### 异步编程
+
+1. 回调函数
+
+- 优点：简单、容易理解
+- 缺点：不利于维护，回调深
+
+2. 事件监听（采用时间驱动模式，取决于某个事件是否发生）：
+   优点：容易理解，可以绑定多个事件，每个事件可以指定多个回调函数
+   缺点：事件驱动型，流程不够清晰
+3. 发布/订阅（观察者模式）
+   类似于事件监听，但是可以通过‘消息中心’，了解现在有多少发布者，多少订阅者
+4. Promise 对象
+   优点：可以利用 then 方法，进行链式写法；可以书写错误时的回调函数；
+   缺点：无法取消，pending 状态时，无法得知目 前进行到哪一步了
+5. Generator 函数
+   优点：函数体内外的数据交换、错误处理机制
+   缺点：流程管理不方便
+6. async 函数
+   优点：内置执行器、更好的语义、更广的适用性、返回的是 Promise、结构清晰。
+   缺点：控制流程复杂
+
 ### Promise 基本特性
 
 [参考](https://github.com/lgwebdream/FE-Interview/issues/29)
@@ -14,7 +36,7 @@
 
 6. Promise.all()方法将多个 Promise 实例，包装成一个新的 Promise 实例，该方法接受一个由 Promise 对象组成的数组作为参数(Promise.all()方法的参数可以不是数组，但必须具有 Iterator 接口，且返回的每个成员都是 Promise 实例)，注意参数中只要有一个实例触发 catch 方法，都会触发 Promise.all()方法返回的新的实例的 catch 方法，如果参数中的某个实例本身调用了 catch 方法，将不会触发 Promise.all()方法返回的新实例的 catch 方法
 
-7. Promise.race()方法的参数与 Promise.all 方法一样，参数中的实例只要有一个率先改变状态就会将该实例的状态传给 Promise.race()方法，并将返回值作为 Promise.race()方法产生的 Promise 实例的返回值
+7. Promise.race()方法的参数与 Promise.all 方法一样，参数中的实例只要有一个率先改变状态就会将该实例的状态传给 Promise.race()方法，并将返回值作为 Promise.race()方法产生的 Promise 实例的返回值,all 和 race 传入的数组中如果有会抛出异常的异步任务，那么只有最先抛出的错误会被捕获，并且是被 then 的第二个参数或者后面的 catch 捕获；但并不会影响数组中其它的异步任务的执行。
 
 8. Promise.resolve()将现有对象转为 Promise 对象，
    1. 如果该方法的参数为一个 Promise 对象，Promise.resolve()将不做任何处理；
@@ -26,22 +48,21 @@
 
 ### Promise 优点
 
-1. 统一异步 API
+1. **统一异步 API**
    Promise 的一个重要优点是它将逐渐被用作浏览器的异步 API ，统一现在各种各样的 API ，以及不兼容的模式和手法。
 
 2. Promise 与事件对比
-   和事件相比较， Promise 更适合处理一次性的结果。在结果计算出来之前或之后注册回调函数都是可以的，都可以拿到正确的值。 Promise 的这个优点很自然。但是，不能使用 Promise 处理多次触发的事件。链式处理是 Promise 的又一优点，但是事件却不能这样链式处理。
+   和事件相比较， Promise 更适合处理一次性的结果。在结果计算出来之前或之后注册回调函数都是可以的，都可以拿到正确的值。 Promise 的这个优点很自然。但是，不能使用 Promise 处理多次触发的事件。**链式处理**是 Promise 的又一优点，但是事件却不能这样链式处理。
 
 3. promise 与回调对比
-   解决了回调地狱的问题，将异步操作以同步操作的流程表达出来。
-   
-4. Promise 带来的额外好处是包含了更好的错误处理方式（包含了异常处理），并且写起来很轻松（因为可以重用一些同步的工具，比如 Array.prototype.map() ）。
+   解决了**回调地狱**的问题，将异步操作以同步操作的流程表达出来。
+4. Promise 带来的额外好处是包含了**更好的错误处理**方式（包含了异常处理），并且写起来很轻松（因为可以重用一些同步的工具，比如 Array.prototype.map() ）。
 
 ### Promise 缺点
 
-1. 无法取消 Promise，一旦新建它就会立即执行，无法中途取消。
-2. 如果不设置回调函数，Promise 内部抛出的错误，不会反应到外部。
-3. 当处于 Pending 状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）。
+1. **无法取消**Promise，一旦新建它就会立即执行，无法中途取消。
+2. 如果**不设置回调函数，Promise 内部抛出的错误，不会反应到外部**。
+3. 当处于 Pending 状态时，**无法得知目前进展**到哪一个阶段（刚刚开始还是即将完成）。
 4. Promise 真正执行回调的时候，定义 Promise 那部分实际上已经走完了，所以 Promise 的报错堆栈上下文不太友好。
 
 ---
@@ -149,7 +170,7 @@ class MyPromise {
     executor(_resolve, _reject);
   }
 
-  // then方法,接收一个成功的回调和一个失败的回调
+  // then方法，接收一个成功的回调和一个失败的回调
   then(resolveFn, rejectFn) {
     // 根据规范，如果then的参数不是function，则我们需要忽略它, 让链式调用继续往下执行
     typeof resolveFn !== "function" ? (resolveFn = (value) => value) : null;
@@ -208,7 +229,7 @@ class MyPromise {
   //finally方法
   finally(callback) {
     return this.then(
-      (value) => MyPromise.resolve(callback()).then(() => value), //执行回调,并returnvalue传递给后面的then
+      (value) => MyPromise.resolve(callback()).then(() => value), //执行回调,并return value传递给后面的then
       (reason) =>
         MyPromise.resolve(callback()).then(() => {
           throw reason;
@@ -269,6 +290,38 @@ class MyPromise {
   }
 }
 ```
+
+### Generator，async/await 和 promise 的区别
+
+1. promise 是 ES6，async/await 是 ES7
+2. async/await 相对于 promise 来讲，写法更加优雅,更符合同步语义，容易理解，使得异步代码更像是同步代码
+3. reject 状态：
+   1. promise 错误可以通过 catch 来捕捉，建议尾部捕获错误，
+   2. async/await 既可以用.then 又可以用 try-catch 捕捉
+4. async/await 是生成器函数的语法糖，拥有内置执行器，不需要额外的调用，直接会自动调用并返回一个 promise 对象
+
+### generator
+
+Generator 函数是 ES6 提供的一种异步编程解决方案，语法行为与传统函数完全不同。
+
+Generator 函数是一个普通函数，但是有两个特征。一是关键字星号（function \*）；二是，函数体内部使用 yield 表达式，定义不同的内部状态。执行 Generator 函数会返回一个遍历器对象。
+
+调用 generator 对象有两个方法：
+
+1. 不断地调用 generator 对象的 next()方法，next()方法会执行 generator 的代码，然后，每次遇到 yield x;就返回一个对象{value: x, done: true/false}，然后“暂停”。返回的 value 就是 yield 的返回值，done 表示这个 generator 是否已经执行结束了。如果 done 为 true，则 value 就是 return 的返回值，也表示这个 generator 对象就已经全部执行完毕，不要再继续调用 next()了。
+2. 直接用 for … of 循环迭代 generator 对象，这种方式不需要我们自己判断 done
+
+### 谈谈对 async/await 的理解
+
+1. async/await 是写异步代码的新方式，它是 generator 的语法糖，以前的方法有回调函数和 Promise。
+2. async/await 是基于 Promise 实现的，它不能用于普通的回调函数。
+3. async/await 与 Promise 一样，是非阻塞的。async/await **使得异步代码看起来像同步代码**
+
+4. async 用来表示函数是异步的，定义的函数**会返回一个 promise 对象**，可以使用 then 方法添加回调函数。
+5. await 必须出现在 async 函数内部，不能单独使用
+6. await 后面可以跟任何的 JS 表达式。
+7. 虽然说 await 可以等很多类型的东西，但是它最主要的意图是用来等待 Promise 对象的状态被 resolved。
+8. **如果 await 的是 promise 对象会造成异步函数停止执行并且等待 promise 的解决,如果等的是正常的表达式则立即执行**。
 
 ### es6 实现 async/await
 
@@ -350,7 +403,6 @@ function generator2promise(generatorFn) {
           var value = info.value;
         } catch (error) {
           reject(error);
-
           return;
         }
 
@@ -372,6 +424,21 @@ function generator2promise(generatorFn) {
     });
   };
 }
+```
+
+### 使用 Promise 实现每隔 1 秒输出 1,2,3
+
+这道题比较简单的一种做法是可以用 Promise 配合着 reduce 不停的在 promise 后面叠加.then，请看下面的代码：
+
+```js
+const arr = [1, 2, 3];
+arr.reduce((p, x) => {
+  return p.then(() => {
+    return new Promise((r) => {
+      setTimeout(() => r(console.log(x)), 1000);
+    });
+  });
+}, Promise.resolve());
 ```
 
 ### promise 并发量控制
@@ -441,30 +508,28 @@ Scheduler 内部可以写其他的方法
 ```javascript
 // 异步调度器
 class Scheduler {
-  constructor(maxCount) {
-    this.task = [];
-    this.working = [];
-    this.limit = maxCount;
+  constructor() {
+    this.waitTasks = []; // 待执行的任务队列
+    this.excutingTasks = []; // 正在执行的任务队列
+    this.maxExcutingNum = 2; // 允许同时运行的任务数量
   }
-  add(promiseCreator) {
-    return new Promise((resolve) => {
-      promiseCreator.resolve = resolve;
-      if (this.working.length < 2) {
-        this.execute(promiseCreator);
-      } else {
-        this.task.push(promiseCreator);
-      }
-    });
+
+  add(promiseMaker) {
+    if (this.excutingTasks.length < this.maxExcutingNum) {
+      this.run(promiseMaker);
+    } else {
+      this.waitTasks.push(promiseMaker);
+    }
   }
-  execute(promiseCreator) {
-    this.working.push(promiseCreator);
-    promiseCreator().then(() => {
-      promiseCreator.resolve();
-      const index = this.working.findIndex((item) => promiseCreator === item);
-      this.working.splice(index, 1);
-      if (this.task.length) {
-        const item = this.task.shift();
-        this.execute(item);
+
+  run(promiseMaker) {
+    const len = this.excutingTasks.push(promiseMaker);
+    const index = len - 1;
+    return new 
+    promiseMaker().then(() => {
+      this.excutingTasks.splice(index, 1);
+      if (this.waitTasks.length > 0) {
+        this.run(this.waitTasks.shift());
       }
     });
   }
@@ -494,6 +559,46 @@ addTask(400, "4");
 // 1200ms时,4完成,输出4
 ```
 
+### 写一个函数，可以控制最大并发数
+
+微信小程序最一开始对并发数限制为 5 个，后来升级到 10 个，如果超过 10 个会被舍弃。后来微信小程序升级为不限制并发请求，但超过 10 个会排队机制。也就是当同时调用的请求超过 10 个时，小程序会先发起 10 个并发请求，超过 10 个的部分按调用顺序进行排队，当前一个请求完成时，再发送队列中的下一个请求。
+
+```js
+function concurrentPoll() {
+  this.tasks = [];
+  this.max = 10;
+  setTimeout(() => {
+    this.run();
+  }, 0);
+}
+
+concurrentPoll.prototype.addTask = function (task) {
+  this.tasks.push(task);
+};
+
+concurrentPoll.prototype.run = function () {
+  if (this.tasks.length == 0) {
+    return;
+  }
+  var min = Math.min(this.tasks.length, max);
+  for (var i = 0; i < min; i++) {
+    this.max--;
+    var task = this.tasks.shift();
+    task()
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        this.max++;
+        this.run();
+      });
+  }
+};
+```
+
 ### 异步请求缓存，怎么保证当前 ajax 请求相同资源时，真实网络层中，实际只发出一次请求
 
 ### 补充：Promise 的局限性
@@ -509,3 +614,391 @@ addTask(400, "4");
 Promise 处理的问题都是“一次性”的，因为一个 Promise 实例只能 resolve 或 reject 一次，所以面对某些需要持续响应的场景时就会变得力不从心。比如上传文件获取进度时，默认采用的就是通过事件监听的方式来实现。
 
 所以说 Promise 并不是万能的，全面了解其优缺点能帮助我们更好地使用 Promise。上述这些问题其实都有解决方案，比如使用 RxJS
+
+## 实现一个异步求和函数
+
+提供一个异步 add 方法如下，需要实现一个 await sum(...args)函数;
+
+```js
+function asyncAdd(a, b, callback) {
+  setTimeout(function () {
+    callback(null, a + b);
+  }, 1000);
+}
+//实现
+async function sum(...args) {
+  if (args.length > 1) {
+    const result = await new Promise((resolve) => {
+      asyncAdd(args[0], args[1], (err, result) => {
+        if (!err) {
+          resolve(result);
+        }
+      });
+    });
+    return sum(result, ...args.splice(2));
+  }
+  return args[0];
+}
+// 认真看的同学应该就能发现，当前版本存在一个优化点，计算时长可以缩短。优化版本如下：
+function createAdd(a, b = 0) {
+  return new Promise((resolve) => {
+    asyncAdd(a, b, (err, result) => {
+      if (!err) {
+        resolve(result);
+      }
+    });
+  });
+}
+
+async function sum(...args) {
+  if (args.length > 1) {
+    const result = [];
+    for (let i = 0; i < args.length; i = i + 2) {
+      result.push(createAdd(args[i], args[i + 1]));
+    }
+    return sum(...(await Promise.all(result)));
+  }
+  return args[0];
+}
+```
+
+## 将一个同步 callback 包装成 promise 形式
+
+同步的 callback 用的最多的是在 node 的回调中，例如下面这种，包装完之后就可以愉快的使用 .then 了。
+
+```js
+nodeGet(param, function (err, data) {});
+// 转化成promise形式
+function nodeGetAysnc(param) {
+  return new Promise((resolve, reject) => {
+    nodeGet(param, function (err, data) {
+      if (err !== null) return reject(err);
+      resolve(data);
+    });
+  });
+}
+// 按照上面的思路，即可写出通用版的形式。
+function promisify(fn, context) {
+  return (...args) => {
+    return new Promise((resolve, reject) => {
+      fn.apply(context, [
+        ...args,
+        (err, res) => {
+          return err ? reject(err) : resolve(res);
+        },
+      ]);
+    });
+  };
+}
+```
+
+### 实现 Person 方法
+
+```javascript
+Person("Li");
+// 输出： Hi! This is Li!
+
+Person("Dan").sleep(10).eat("dinner");
+// 输出：
+// Hi! This is Dan!
+// 等待10秒..
+// Wake up after 10
+// Eat dinner~
+
+Person("Jerry").eat("dinner").eat("supper");
+// 输出：
+// Hi This is Jerry!
+// Eat dinner~
+// Eat supper~
+
+Person("Smith").sleepFirst(5).eat("supper");
+// 输出：
+// 等待5秒
+// Wake up after 5
+// Hi This is Smith!
+// Eat supper
+```
+
+答案
+
+```javascript
+class PersonGenerator {
+  taskQueue = [];
+  constructor(name) {
+    this.taskQueue.push(() => this.sayHi(name));
+    this.runTaskQueue();
+  }
+  nextTask = () => {
+    if (this.taskQueue.length > 0) {
+      const task = this.taskQueue.shift();
+      if (typeof task === "function") {
+        task();
+        this.nextTask();
+      }
+      if (typeof task === "number") {
+        console.log(`Sleep ${task} seconds\n`);
+        setTimeout(() => this.nextTask(), task * 1000);
+      }
+    }
+  };
+
+  runTaskQueue = () => {
+    setTimeout(() => this.nextTask());
+  };
+
+  sayHi(name) {
+    console.log(`Hi! This is ${name}! \n`);
+    return this;
+  }
+
+  sleep(seconds) {
+    this.taskQueue.push(seconds);
+    return this;
+  }
+
+  sleepFirst(seconds) {
+    this.taskQueue.splice(-1, 0, seconds);
+    return this;
+  }
+
+  eat(food) {
+    this.taskQueue.push(() => console.log(`Eat ${food}~ \n`));
+    return this;
+  }
+}
+
+const Person = (name) => new PersonGenerator(name);
+
+Person("helloWorld").sleepFirst(3).sleep(3).eat("little_cute");
+```
+
+```javascript
+function _LazyMan(name) {
+  this.nama = name;
+  this.queue = [];
+  this.queue.push(() => {
+    console.log("Hi! This is " + name + "!");
+    this.next();
+  });
+  setTimeout(() => {
+    this.next();
+  }, 0);
+}
+
+_LazyMan.prototype.eat = function (name) {
+  this.queue.push(() => {
+    console.log("Eat " + name + "~");
+    this.next();
+  });
+  return this;
+};
+
+_LazyMan.prototype.next = function () {
+  var fn = this.queue.shift();
+  fn && fn();
+};
+
+_LazyMan.prototype.sleep = function (time) {
+  this.queue.push(() => {
+    setTimeout(() => {
+      console.log("Wake up after " + time + "s!");
+      this.next();
+    }, time * 1000);
+  });
+  return this;
+};
+
+_LazyMan.prototype.sleepFirst = function (time) {
+  this.queue.unshift(() => {
+    setTimeout(() => {
+      console.log("Wake up after " + time + "s!");
+      this.next();
+    }, time * 1000);
+  });
+  return this;
+};
+
+function LazyMan(name) {
+  return new _LazyMan(name);
+}
+```
+
+### 按要求完成代码 Promise 顺序执行
+
+```javascript
+const timeout = (ms) =>
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+const ajax1 = () =>
+  timeout(2000).then(() => {
+    console.log("1");
+    return 1;
+  });
+const ajax2 = () =>
+  timeout(1000).then(() => {
+    console.log("2");
+    return 2;
+  });
+const ajax3 = () =>
+  timeout(2000).then(() => {
+    console.log("3");
+    return 3;
+  });
+const mergePromise = (ajaxArray) => {
+  // 1,2,3 done [1,2,3] 此处写代码 请写出ES6、ES3 2中解法
+};
+mergePromise([ajax1, ajax2, ajax3]).then((data) => {
+  console.log("done");
+  console.log(data); // data 为[1,2,3]
+});
+// 执行结果为：1 2 3 done [1,2,3]
+```
+
+答案
+
+```javascript
+//解法1
+const mergePromise = (ajaxArray) => {
+  //串行
+  return new Promise((resolve, reject) => {
+    let len = ajaxArray.length;
+    let idx = 0;
+    let tem = [];
+    function next() {
+      if (idx === len) return resolve(tem);
+      ajaxArray[idx]()
+        .then((data) => {
+          tem.push(data);
+          idx++;
+          next();
+        })
+        .catch(reject);
+    }
+    next();
+  });
+};
+// 解法2
+// es6 串行
+const mergePromise = (ajaxArray) => {
+  return (async function () {
+      let ret = []
+      let idx = 0
+      let len = ajaxArray.length
+      while(idx < len) {
+          let data = await ajaxArray[idx]()
+          ret.push(data)
+          idx++
+      }
+      return ret
+  })()
+}
+console.log(data)
+})
+```
+
+实现具有并发限制的 promise.all
+
+```js
+function promsieTask(taskList, maxNum) {
+  return new Promise((resolve, rejuct) => {
+    let runCount = 0;
+    let complated = 0;
+    const taskNum = taskList.length;
+    const resArr = [];
+    let current = 0;
+    function handler() {
+      if (runCount >= maxNum) return;
+      const a = taskNum - complated;
+      const b = maxNum - runCount;
+      const arr = taskList.splice(0, a > b ? b : a);
+      arr.forEach((task, index) => {
+        const d = current + index;
+        task
+          .then(
+            (res) => {
+              console.log(current, index, res);
+              resArr[current] = res;
+            },
+            (reason) => {
+              resArr[current] = reason;
+            }
+          )
+          .finally(() => {
+            complated++;
+            runCount--;
+
+            if (complated === taskNum) {
+              resolve(resArr);
+            }
+            handler();
+          });
+      });
+      current += taskList.length;
+    }
+    handler();
+  });
+}
+```
+
+## 实现 maxRequest，成功后 resolve 结果，失败后重试，尝试超过一定次数才真正的 reject
+
+```js
+function maxRequest(fn, maxNum) {
+  return new Promise((resolve, reject) => {
+    function help(index) {
+      Promise.resolve(fn())
+        .then((value) => {
+          resolve(value);
+        })
+        .catch((error) => {
+          if (index - 1 > 0) {
+            help(index - 1);
+          } else {
+            reject(error);
+          }
+        });
+    }
+    help(maxNum);
+  });
+}
+```
+
+## 实现 Promise.allSettled
+
+返回一个在所有给定的 promise 都已经 fulfilled 或 rejected 后的 promise，并带有一个对象数组，每个对象表示对应的 promise 结果。
+一旦所指定的 promises 集合中每一个 promise 已经完成，无论是成功的达成或被拒绝，未决议的 Promise 将被异步完成。那时，所返回的 promise 的处理器将传入一个数组作为输入，该数组包含原始 promises 集中每个 promise 的结果。
+
+对于每个结果对象，都有一个 status 字符串。如果它的值为 fulfilled，则结果对象上存在一个 value 。如果值为 rejected，则存在一个 reason 。value（或 reason ）反映了每个 promise 决议（或拒绝）的值
+
+```js
+Promise.allSettled = function (promises) {
+  let count = 0;
+  let result = [];
+  return new Promise((resolve, reject) => {
+    promises.forEach((p, index) => {
+      Promise.resolve(p)
+        .then((value) => {
+          result[index] = {
+            status: "fulfilled",
+            value,
+          };
+        })
+        .catch((e) => {
+          result[index] = {
+            status: "rejected",
+            reason: e,
+          };
+        })
+        .finally(() => {
+          count++;
+          if (count === promises.length) {
+            resolve(result);
+          }
+        });
+    });
+  });
+};
+```

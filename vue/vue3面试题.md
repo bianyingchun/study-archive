@@ -2,6 +2,32 @@
 
 就是启动一个 koa 服务器拦截浏览器请求 ESModule 的请求。通过路径查找目录下对应文件的文件做一定的处理最终以 ESModule 格式返回给客户端
 
+### Vue3 对比 Vue2 发生哪些变化
+
+1. 多根节点
+   Vue3 支持了多根节点组件，也就是 fragment。Vue2 中，编写页面的时候，我们需要去将组件包裹在<div>中，否则报错警告。
+2. Teleport
+   Vue3 提供 Teleport 组件可将部分 DOM 移动到 Vue app 之外的位置。比如项目中常见的 Dialog 组件。
+3. Suspense 异步组件
+4. composition api
+   Vue2 是 选项式 API（Option API），一个逻辑会散乱在文件不同位置（data、props、computed、watch、生命周期函数等），导致代码的可读性变差，需要上下来回跳转文件位置。Vue3 组合式 API（Composition API）则很好地解决了这个问题，可将同一逻辑的内容写到一起。增强了代码的可读性、内聚性,同时通过抽取hook实现逻辑复用，提升效率。相较于mixin具有隐式依赖等缺点，更具备可用性
+5. 响应式原理
+   Vue2 响应式原理基础是 Object.defineProperty；Vue3 响应式原理基础是 Proxy
+6. 静态标记(PatchFlag)
+   在创建虚拟 DOM 的时候会根据 DOM 中的内容会不会发生变化添加静态标记,数据更新后，只对比带有**patch flag**的节点
+
+7. 缓存内联事件处理函数:避免造成不必要的组件更新。
+8. diff 优化：
+   1. patchFlag 帮助 diff 时区分静态节点，以及不同类型的动态节点。一定程度地减少节点本身及其属性的比对。
+   2. 有运用最长递增序列的算法思想。
+9. 打包优化
+   Tree shaking support：可以将无用模块“剪辑”，仅打包需要的，按需编译,体积比 Vue2.x 更小
+10. TypeScript
+    Vue3 由 TS 重写，相对于 Vue2 有更好地 TypeScript 支持。
+11. shapeFlag 类型编码
+
+Vue.js 3.0 内部还针对 vnode 的 type，做了更详尽的分类，包括 Suspense、Teleport 等，且把 vnode 的类型信息做了编码，以便在后面的 patch 阶段，可以根据不同的类型执行相应的处理逻辑
+
 ### Vue3.0 新特性
 
 https://www.jianshu.com/p/9d3ddaec9134
@@ -93,3 +119,26 @@ https://blog.csdn.net/zl_Alien/article/details/106595459
 - 极易复用
 - 可灵活组合（生命周期钩子可多次使用）
 - 提供更好的上下文支持
+
+### vue3 中移除了 native 修饰符，现在该如何绑定原生事件
+
+v-on 的 .native 修饰符已被移除。同时，新增的 emits 选项允许子组件定义真正会被触发的事件。
+
+因此，对于子组件中未被定义为组件触发的所有事件监听器，Vue 现在将把它们作为原生事件监听器添加到子组件的根元素中 (除非在子组件的选项中设置了 inheritAttrs: false)。
+
+<my-component
+  v-on:close="handleComponentEvent"
+  v-on:click="handleNativeClickEvent"
+/>
+MyComponent.vue
+
+<script>
+  export default {
+    emits: ['close']
+  }
+</script>
+
+## vue3.0为什么要引入CompositionAPI？
+更好的代码组织，options api造成了代码的跳来跳去
+逻辑复用更加的方便，虽然mixin也能够很好的复用代码，但是当mixin多了以后就不知道变量哪里来的了，还会造成命名冲突
+没有让人捉摸不透的this

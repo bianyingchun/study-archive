@@ -67,7 +67,7 @@
 
    1. 简单请求
       CORS 将请求分为简单请求和非简单请求，可以简单的认为，简单请求就是没有加上额外请求头部的 get 和 post 请求，并且如果是 post 请求，请求格式不能是 application/json
-
+ 
       对于简单请求，浏览器直接发出 CORS 请求。具体来说，就是在头信息之中，增加一个 Origin 字段。
 
       1. origin Access-control-allow-origin :'\*'
@@ -76,7 +76,7 @@
       1. 预检 options
       2. Access-Control-Allow-Origin: http://localhost:3000
       3. Access-Control-Allow-Methods: PUT,DELETE,POST,GET
-         上面两个条件符合，则正式发出请求，
+      上面两个条件符合，则正式发出请求，
       4. Access-Control-Max-Age: 86400 在该非简单请求在服务器端通过检验的那一刻起，当流逝的时间的毫秒数不足 Access-Control-Max-Age 时，就不需要再进行预检，可以直接发送一次请求。
    3. 允许发送 cookie Aceess-control-alow-credentials:true(如果要发送 Cookie，Access-Control-Allow-Origin 不能为\*)
 

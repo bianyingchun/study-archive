@@ -290,10 +290,48 @@ const render = () => {
         </>
     )
  */
-function useReducer() {
+function useReducer(reducer, initialState) {
   const [state, setState] = useState(initialState);
   let dispatch = (action) => {
     setState(reducer(state, action));
   };
   return [state, dispatch];
+}
+
+// 手写useEffect实现原理
+/**
+ * 参数是回调函数，依赖以数组的形式
+存储上一次render时的依赖
+兼容多次调用，同一个组件下可能会有多次使用
+比较本次render和上一次render依赖，执行回调
+增加副作用清除（effect触发后会将清除函数暂存起来，等下次触发时执行）
+ */
+
+let index = 0;
+// 同一组件下可能会出现多个useEffect使用，以数组的形式存储
+let lastDepsBox = [];
+let lastClearFnCallback = [];
+/**
+ *
+ * @param {callback} fn 回调函数
+ * @param {Array} deps 依赖
+ */
+function UseEffect(fn, deps) {
+  // 存储上一次的依赖 存储的是[[]、[]、[]]
+  const lastDeps = lastDepsBox[index];
+  // 记录状态变化
+  const flag =
+    !lastDeps || // 首次渲染 刚开始就会触发
+    !deps || // 没有依赖，次次触发
+    deps.some((dep, index) => dep !== lastDeps[index]); // 依赖进行比较
+  if (flag) {
+    lastDepsBox[index] = deps;
+    // effect触发后会将清除函数暂存起来，等下次触发时执行
+    if (lastClearFnCallback[index]) {
+      lastClearFnCallback[index]();
+    }
+    // 将清除函数暂存起来
+    lastClearFnCallback[index] = fn();
+  }
+  index++;
 }

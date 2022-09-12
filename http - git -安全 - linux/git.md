@@ -53,3 +53,42 @@
 用 git log --graph 命令可以看到分支合并图
 
 //https://blog.csdn.net/asoar/article/details/84111841
+
+### 拉取远程分支到本地
+
+1. 把远程分支拉到本地
+   git fetch origin develop（develop 为远程仓库的分支名)
+2. 在本地创建分支 dev 并切换到该分支
+   git checkout -b dev(本地分支名称) origin/develop(远程分支名称)
+3. 把远程分支上的内容都拉取到本地
+   git pull origin develop(远程分支名称)
+
+## 回退
+
+1. 回退版本
+   git reset --hard commitID 回退全部
+   git reset --mixed 回退部分  
+   git reset --soft 只回退 HEAD
+
+2. 撤销工作区的修改
+   git checkout -- file
+3. 撤销暂存区的修改
+   git reset HEAD <file>
+4. 要重返未来，用 git reflog 查看命令历史，以便确定要回到未来的哪个版本。
+   git reflog
+
+## cherry pick
+
+git cherry-pick 可以理解为”挑拣”提交，和 merge 合并一个分支的所有提交不同的是，
+它会获取某一个分支的单笔提交，并作为一个新的提交引入到你当前分支上。
+当我们需要在本地合入其他分支的提交时，如果我们不想对整个分支进行合并，而是只想将某一次提交合入到本地当前分支上，那么就要使用 git cherry-pick 了。
+
+## revert 回退某次提交
+
+1. git revert <commit-id> 针对普通 commit
+2. git revert <commit-id> -m 针对 merge 的 commit
+
+> git revert 会新建一条 commit 信息，来撤回之前的修改。git reset 会直接将提交记录退回到指定的 commit 上。
+
+https://juejin.cn/post/6974184935804534815#heading-14
+https://juejin.cn/post/7071780876501123085#heading-17

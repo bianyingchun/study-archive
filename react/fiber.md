@@ -58,7 +58,7 @@ Fiber 树在首次渲染的时候会一次性生成。在后续需要 Diff 的�
 
 注意：React.createElement 创建一颗 Element 树，可以称之为 Virtual DOM Tree
 
-### 6. firber nodes
+### 6. fiber nodes
 
 在 reconciliation 期间，来自 render 方法返回的每个 React 元素的数据被合并到 fiber node 树中，每个 React 元素都有一个相应的 fiber node。与 React 元素不同，每次渲染过程，不会再重新创建 fiber。这些可变的数据包含组件 state 和 DOM。
 可以这样认为：**fiber 作为一种数据结构，用于代表某些 worker，换句话说，就是一个 work 单元，通过 Fiber 的架构，提供了一种跟踪，调度，暂停和中止工作的便捷方式**。
@@ -79,7 +79,7 @@ React 的核心原则之一是一致性。 React 总是一次更新 DOM - 它不
 
 在 render 阶段时，React 通过 setState 或 React.render 来执行组件的更新，并确定需要在 UI 中更新的内容。如果是第一次渲染，React 会为 render 方法返回的每个元素，创建一个新的 fiber 节点。**在接下来的更新中，将重用和更新现有 React 元素的 fiber 节点。render 阶段的结果是生成一个部分节点标记了 side effects 的 fiber 节点树，side effects 描述了在下一个 commit 阶段需要完成的工作。**
 
-在 commit 阶段，React 采用标有 side effects 的 fiber 树并将其应用于实例。它遍历 side effects 列表并执行 DOM 更新和用户可见的其他更改。
+在 commit 阶段，**React 采用标有 side effects 的 fiber 树并将其应用于实例。它遍历 side effects 列表并执行 DOM 更新和用户可见的其他更改。**
 
 一个很重要的点是，**render 阶段可以异步执行**。 React 可以根据可用时间来处理一个或多个 fiber 节点，然后停止已完成的工作，并让出调度权来处理某些事件。然后它从它停止的地方继续。但有时候，它可能需要丢弃完成的工作并再次从头。由于在 render 阶段执行的工作不会导致任何用户可见的更改（如 DOM 更新），因此这些暂停是不会有问题的。相反，**在接下来的 commit 阶段始终是同步的，这是因为在此阶段执行的工作，将会生成用户可见的变化，**例如， DOM 更新，这就是 React 需要一次完成它们的原因。
 
@@ -126,11 +126,11 @@ scheduler 会根据当前主线程的使用情况去处理这次 update。为了
 4. requestIdleCallback 方法提供 deadline，即任务执行限制时间，以切分任务，避免长时间执行，阻塞 UI 渲染而导致掉帧；
    一旦 reconciliation 过程得到时间片，就开始进入 work loop。work loop 机制可以让 react 在计算状态和等待状态之间进行切换。为了达到这个目的，对于每个 loop 而言，需要追踪两个东西：
 
-- 下一个工作单元（下一个待处理的 fiber）;
-- 当前还能占用主线程的时间。
+- **下一个工作单元（下一个待处理的 fiber）**;
+- **当前还能占用主线程的时间**。
   第一个 loop，下一个待处理单元为根节点。因为根节点上的更新队列为空，所以直接从 fiber-tree 上将根节点复制到 workInProgressTree 中去。根节点中包含指向子节点（List）的指针。
   根节点处理完成后，react 此时检查时间片是否用完。如果没有用完，根据其保存的下个工作单元的信息开始处理下一个节点 List。
-  接下来进入处理 List 的 work loop，List 中包含更新，因此此时 react 会调用 setState 时传入的 updater funciton 获取最新的 state 值，此时应该是[1,4,9]。通常我们现在在调用 setState 传入的是一个对象，但在使用 fiber conciler 时，必须传入一个函数，函数的返回值是要更新的 state。react 从很早的版本就开始支持这种写法了，不过通常没有人用。在之后的 react 版本中，可能会废弃直接传入对象的写法。
+  接下来进入处理 List 的 work loop，List 中包含更新，因此此时 react 会调用 setState 时传入的 updater function 获取最新的 state 值，此时应该是[1,4,9]。通常我们现在在调用 setState 传入的是一个对象，但在使用 fiber reconciler 时，必须传入一个函数，函数的返回值是要更新的 state。react 从很早的版本就开始支持这种写法了，不过通常没有人用。在之后的 react 版本中，可能会废弃直接传入对象的写法。
 
 ```javascript
 setState({}, callback); // stack conciler
@@ -143,9 +143,13 @@ setState(() => {
 List 节点处理完成，react 仍然会检查当前时间片是否够用。如果够用则处理下一个，也就是 button。加入这个时候，用户点击了放大字体的按钮。这个放大字体的操作，纯粹由 js 实现，跟 react 无关。但是操作并不能立即生效，因为 react 的时间片还未用完，因此接下来仍然要继续处理 button。
 button 没有任何子节点，所以此时可以返回，并标志 button 处理完成。如果 button 有改变，需要打上 tag，但是当前情况没有，只需要标记完成即可。老规矩，处理完一个节点先看时间够不够用。注意这里放大字体的操作已经在等候释放主线程了
 第二个 Item shouldComponentUpdate 返回 true，所以需要打上 tag，标志需要更新，复制 div，调用 render，讲 div 中的内容从 2 更新为 4，因为 div 有更新，所以标记 div。当前节点处理完成.
+
 接下来处理第一个 item。通过 shouldComponentUpdate 钩子可以根据传入的 props 判断其是否需要改变。对于第一个 Item 而言，更改前后都是 1,所以不会改变，shouldComponentUpdate 返回 false，复制 div，处理完成，检查时间，如果还有时间进入第二个 Item
+
 对于上面这种情况，div 已经是叶子节点，且没有任何兄弟节点，且其值已经更新，这时候，需要将此节点改变产生的 effect 合并到父节点中。此时 react 会维护一个列表，其中记录所有产生 effect 的元素.合并后，回到父节点 Item，父节点标记完成。
+
 下一个工作单元是 Item，在进入 Item 之前，检查时间。但这个时候时间用完了。此时 react 必须交换主线程，并告诉主线程以后要为其分配时间以完成剩下的操作。
+
 主线程接下来进行放大字体的操作。完成后执行 react 接下来的操作，跟上一个 Item 的处理流程几乎一样，处理完成后整个 fiber-tree 和 workInProgress 如下：完成后，Item 向 List 返回并 merge effect，effect List 现在如下所示：
 
 此时 List 向根节点返回并 merge effect，所有节点都可以标记完成了。此时 react 将 workInProgress 标记为 pendingCommit。意思是可以进入 commit 阶段了。
@@ -230,36 +234,38 @@ fiber 是对对 reconciler 的彻底改造
 
 7. 如果没有下一个工作单元了（回到了 workInProgress tree 的根节点），第 1 阶段结束，进入 pendingCommit 状态
 
-实际上是 1-6 的工作循环，7 是出口，工作循环每次只做一件事，做完看要不要喘口气。工作循环结束时，workInProgress tree 的根节点身上的 effect list 就是收集到的所有 side effect（因为每做完一个都向上归并）
+实际上是 1-6 的工作循环，7 是出口，**工作循环每次只做一件事，做完看要不要喘口气。工作循环结束时，workInProgress tree 的根节点身上的 effect list 就是收集到的所有 side effect**（因为每做完一个都向上归并）
 
-所以，构建 workInProgress tree 的过程就是 diff 的过程，通过 requestIdleCallback 来调度执行一组任务，每完成一个任务后回来看看有没有插队的（更紧急的），每完成一组任务，把时间控制权交还给主线程，直到下一次 requestIdleCallback 回调再继续构建 workInProgress tree
+所以，**构建 workInProgress tree 的过程就是 diff 的过程，通过 requestIdleCallback 来调度执行一组任务，每完成一个任务后回来看看有没有插队的（更紧急的），每完成一组任务，把时间控制权交还给主线程，直到下一次 requestIdleCallback 回调再继续构建 workInProgress tree**
 
 ##### 2. commit (同步，一气呵成，不能)
 
 commit 应用这些 DOM change
 
-1. 处理effect list（包括3种处理：更新DOM树、调用组件生命周期函数以及更新ref等内部状态）
-2. 出对结束，第2阶段结束，所有更新都commit到DOM树上了
+1. 处理 effect list（包括 3 种处理：更新 DOM 树、调用组件生命周期函数以及更新 ref 等内部状态）
+2. 出对结束，第 2 阶段结束，所有更新都 commit 到 DOM 树上了
 
-#### fiber tree与workInProgress tree
-**双缓冲技术**（double buffering），就像redux里的nextListeners，以fiber tree为主，workInProgress tree为辅
+#### fiber tree 与 workInProgress tree
 
-双缓冲具体指的是workInProgress tree构造完毕，得到的就是新的fiber tree，然后喜新厌旧（把current指针指向workInProgress tree，丢掉旧的fiber tree）就好了
+**双缓冲技术**（double buffering），就像 redux 里的 nextListeners，以 fiber tree 为主，workInProgress tree 为辅
+
+双缓冲具体指的是 workInProgress tree 构造完毕，得到的就是新的 fiber tree，然后喜新厌旧（把 current 指针指向 workInProgress tree，丢掉旧的 fiber tree）就好了
 
 这样做的好处：
 
-+ 能够复用内部对象（fiber）
+- 能够复用内部对象（fiber）
 
-+ 节省内存分配、GC的时间开销
+- 节省内存分配、GC 的时间开销
 
-每个fiber上都有个**alternate**属性，也指向一个fiber，创建workInProgress节点时优先取alternate，没有的话就创建一个：
+每个 fiber 上都有个**alternate**属性，也指向一个 fiber，创建 workInProgress 节点时优先取 alternate，没有的话就创建一个：
 
 #### 六.优先级策略
-每个工作单元运行时有6种优先级：
 
-1. synchronous 与之前的Stack reconciler操作一样，同步执行
+每个工作单元运行时有 6 种优先级：
 
-2. task 在next tick之前执行
+1. synchronous 与之前的 Stack reconciler 操作一样，同步执行
+
+2. task 在 next tick 之前执行
 
 3. animation 下一帧之前执行
 
@@ -267,14 +273,47 @@ commit 应用这些 DOM change
 
 5. low 稍微延迟（100-200ms）执行也没关系
 
-6. offscreen 下一次render时或scroll时才执行
+6. offscreen 下一次 render 时或 scroll 时才执行
 
-synchronous首屏（首次渲染）用，要求尽量快，不管会不会阻塞UI线程。animation通过requestAnimationFrame来调度，这样在下一帧就能立即开始动画过程；后3个都是由requestIdleCallback回调执行的；offscreen指的是当前隐藏的、屏幕外的（看不见的）元素
+synchronous 首屏（首次渲染）用，要求尽量快，不管会不会阻塞 UI 线程。animation 通过 requestAnimationFrame 来调度，这样在下一帧就能立即开始动画过程；后 3 个都是由 requestIdleCallback 回调执行的；offscreen 指的是当前隐藏的、屏幕外的（看不见的）元素
 
 高优先级的比如键盘输入（希望立即得到反馈），低优先级的比如网络请求，让评论显示出来等等。另外，紧急的事件允许插队
 
-这样的优先级机制存在2个问题：
+这样的优先级机制存在 2 个问题：
 
-+ 生命周期函数怎么执行（可能被频频中断）：触发顺序、次数没有保证了
+- 生命周期函数怎么执行（可能被频频中断）：触发顺序、次数没有保证了
 
-+ starvation（低优先级饿死）：如果高优先级任务很多，那么低优先级任务根本没机会执行（就饿死了）
+- starvation（低优先级饿死）：如果高优先级任务很多，那么低优先级任务根本没机会执行（就饿死了）
+
+从 React 17.0.0 源码来看，当下 React 发起 Task 调度的姿势有两个：setTimeout、**MessageChannel**。在宿主环境不支持 MessageChannel 的情况下，会降级到 setTimeout。但不管是 setTimeout 还是 MessageChannel，它们发起的都是异步任务。
+
+因此 **requestHostCallback 发起的“即时任务”最早也要等到下一次事件循环才能够执行。“即时”仅仅意味它相对于“延时任务”来说，不需要等待指定的时间间隔，并不意味着同步调用**。
+
+#### 为什么选择 messageChannel
+
+https://juejin.cn/post/6953804914715803678#heading-4
+
+React Scheduler 使用 MessageChannel 的原因为：生成宏任务，实现：
+
+- 将主线程还给浏览器，以便浏览器更新页面。
+- 浏览器更新页面后继续执行未完成的任务。
+
+##### 为什么不使用微任务呢？
+
+微任务将在页面更新前全部执行完，所以达不到「将主线程还给浏览器」的目的。
+
+##### 为什么不使用 setTimeout(fn, 0) 呢？
+
+递归的 setTimeout() 调用会使调用间隔变为 4ms，导致浪费了 4ms。
+
+##### 为什么不使用 rAF() 呢？
+
+- 如果上次任务调度不是 rAF() 触发的，将导致在当前帧更新前进行两次任务调度。例如直接执行 scheduler.scheduleTask()
+- 页面更新的时间不确定，如果浏览器间隔了 10ms 才更新页面，那么这 10ms 就浪费了。
+
+#### 不使用 requestIdleCallback 的原因：
+
+1. 兼容性，对浏览器版本要求高。
+2. 最重要的一点。在空闲状态下，requestIdleCallback(callback) 回调函数的执行间隔是 50ms（W3C 规定），也就是 20FPS，1 秒内执行 20 次，肯定是不行的。
+
+那么什么是空闲状态？也就 UI 界面没有发生更新，如果有动画啥的，那就是交互状态，当 UI 界面处于交互状态下，requestIdleCallback 就正常的是在 一帧渲染后执行回调函数(前提是一帧渲染后没有主线程没其他任务了)。

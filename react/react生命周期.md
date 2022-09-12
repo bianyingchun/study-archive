@@ -99,7 +99,7 @@ React 官方提供了一个通用的优化方案，也就是 PureComponent。Pur
 
 同挂载阶段一致
 
-#### 6.getSnapshotBeforeUpdate
+#### 6. getSnapshotBeforeUpdate
 
 getSnapshotBeforeUpdate 方法是配合 React 新的异步渲染的机制，**它的执行时机是在 render 方法之后，真实 DOM 更新之前。**在这个阶段里，我们可以同时获取到更新前的真实 DOM 和更新前后的 state&props 信息。
 
@@ -200,12 +200,4 @@ Fiber 架构的重要特征就是可以被打断的异步渲染模式。但这�
 1. [如何避免生命周期中的坑？](https://kaiwu.lagou.com/course/courseInfo.htm?courseId=566#/detail/pc?id=5793)
 2. [为什么 React 16 要更改组件的生命周期？（下）](https://kaiwu.lagou.com/course/courseInfo.htm?courseId=510#/detail/pc?id=4852)
 
-3. 管理后台分时报表优化以及公告管理上线
 
-4. 报表模板在线编辑工具开发：
-
-   1. 集成 x-data-spreadsheet 插件，封装基础表格组件 2. 支持中文：修改 x-data-spreadsheet 源码 local.js 3. 支持单元格不自动计算表达式值：修改源码，通过 data.settings.ignoreFormula 控制是否计算表达式
-
-   2. 包装基础表格组件，实现复杂编辑功能，支持公式编辑，高亮显示变量。
-
-   3. 抽离 excel 导入函数

@@ -42,7 +42,7 @@
 - Vite: 请求变更的模块，再重新加载
   Vite 通过 chokidar 来监听文件系统的变更，只用对发生变更的模块重新加载， 只需要精确的使相关模块与其临近的 HMR 边界连接失效即可，这样 HMR 更新速度就不会因为应用体积的增加而变慢而 Webpack 还要经历一次打包构建。所以 HMR 场景下，Vite 表现也要好于 Webpack。
 
-#### 2 核心流程
+#### 核心流程
 
 Vite 整个热更新过程可以分成四步
 
@@ -57,9 +57,9 @@ Vite 整个热更新过程可以分成四步
 
 讲师回复： 这是目前看到最好的问题之一，不过提问者应该更进一步，提升自己解决问题，找到答案的能力。具体原因在 https://github.com/vitejs/vite/blob/91dbb017091c175a54bcd1c93a69f8458d1bde8d/docs/guide/migration.md#for-plugin-authors 中有所体现了其实，简单总结一下是 vite@2.x 主要是用基于 hooks 的插件，对于 koa 中间件的需求大幅度减少，从依赖成本上看，old school 的 connect 即可方便轻巧满足需求了
 
-## 依赖预构建
+## EsBuild 依赖预构建
 
-1. CommonJS 和 UMD 兼容性: 开发阶段中，Vite 的开发服务器将所有代码视为原生 ES 模块。因此，Vite 必须先将作为 CommonJS 或 UMD 发布的依赖项转换为 ESM。
+1. CommonJS 和 UMD 兼容性: **开发阶段中，Vite 的开发服务器将所有代码视为原生 ES 模块。因此，Vite 必须先将作为 CommonJS 或 UMD 发布的依赖项转换为 ESM。**
 
 当转换 CommonJS 依赖时，Vite 会执行智能导入分析，这样即使导出是动态分配的（如 React），按名导入也会符合预期效果：
 
@@ -76,8 +76,8 @@ import React, { useState } from "react";
 
 ### esbuild
 
-Vite 底层使用 Esbuild 实现对.`ts、jsx、.`js 代码文件的转化，所以先看下什么是 es-build。
-Esbuild 是一个 JavaScript`` Bundler 打包和压缩工具，它提供了与 Webpack、Rollup 等工具相似的资源打包能力。可以将 JavaScript 和 TypeScript 代码打包分发在网页上运行。但其打包速度却是其他工具的 10 ～ 100 倍。
+Vite 底层使用 Esbuild 实现对`.ts、jsx、.js` 代码文件的转化，所以先看下什么是 es-build。
+Esbuild 是一个 JavaScript Bundler 打包和压缩工具，它提供了与 Webpack、Rollup 等工具相似的资源打包能力。可以将 JavaScript 和 TypeScript 代码打包分发在网页上运行。但其打包速度却是其他工具的 10 ～ 100 倍。
 目前他支持以下的功能：
 
 加载器、压缩、打包、Tree shaking、Source map 生成
@@ -134,6 +134,6 @@ Vite 可以使用插件进行扩展，这得益于 Rollup 优秀的插件接口�
 ### 缺点
 
 1. 生态：目前 Vite 的生态不如 Webapck，不过我觉得生态也只是时间上的问题。
-2. 生产环境由于 esbuild 对 css 和代码分割不友好使用 Rollup 进行打包
+2. prod环境的构建，目前用的Rollup，原因在于esbuild对于css和代码分割不是很友好
 
 Vite.js 虽然才在构建打包场景兴起，但在很多场景下基本都会优于现有的解决方案。如果有生态、想要丰富的 loader、plugins 的要求可以考虑成熟的 Webpack。在其余情况下，Vite.js 不失为一个打包构建工具的好选择。

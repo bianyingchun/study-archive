@@ -3,13 +3,13 @@ service worker 是什么
 一个服务器与浏览器之间的中间人角色，如果网站中注册了service worker那么它可以拦截当前网站所有的请求，进行判断（需要编写相应的判断程序），如果需要向服务器发起请求的就转给服务器，如果可以直接使用缓存的就直接返回缓存不再转给服务器。从而大大提高浏览体验。
 
 ### 以下是一些细碎的描述
-1. 基于web worker（一个独立于JavaScript主线程的独立线程，在里面执行需要消耗大量资源的操作不会堵塞主线程）
-2. 在web worker的基础上增加了离线缓存的能力
+1. **基于web worker**（一个独立于JavaScript主线程的独立线程，在里面执行需要消耗大量资源的操作不会堵塞主线程）
+2. **在web worker的基础上增加了离线缓存的能力**
 3. 本质上充当Web应用程序（服务器）与浏览器之间的代理服务器（可以拦截全站的请求，并作出相应的动作->由开发者指定的动作）
-4. 创建有效的离线体验（将一些不常更新的内容缓存在浏览器，提高访问体验）
+4. 创建有效的**离线**体验（将一些不常更新的内容缓存在浏览器，提高访问体验）
 5. 由事件驱动的,具有生命周期
 6. 可以访问cache和indexDB
-7. 支持推送
+7. ***支持推送**
 8. 并且可以让开发者自己控制管理缓存的内容以及版本
 
 ### 如何使用
@@ -24,11 +24,9 @@ service worker 是什么
             /* scope 参数是可选的，可以用来指定你想让 service worker 控制的内容的子目录。 在这个例子里，我们指定了 '/'，表示 根网域下的所有内容。这也是默认值。 */
             navigator.serviceWorker.register('./serviceWorker.js', {scope: './'})
                 .then(function (registration) {
- 
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 })
                 .catch(function (err) {
- 
                     console.log('ServiceWorker registration failed: ', err);
                 });
         });

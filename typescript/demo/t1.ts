@@ -1,10 +1,24 @@
-const a: string = "3";
-const b: any = 2;
-
-let t: unknown;
-if (typeof t === "number") {
-  t.toFixed(2);
+interface Person {
+  name: string;
+  age: number;
+  location: string;
 }
-const arrayNumber: number[] = [1, 2, 3, 4];
 
-const greaterThan2: number = arrayNumber.find((num) => num > 2) as number; // 提示 ts(2322)
+type K1 = keyof Person; // "name" | "age" | "location"
+type K2 = keyof Person[];  // number | "length" | "push" | "concat" | ...
+type K3 = keyof { [x: string]: Person };  // string | number
+
+
+
+function getProperty<T, K extends keyof T>(obj:T, key:K){
+  return obj[key]
+}
+
+console.log(getProperty({a:1},'a'))
+
+interface A<T=string> {
+  name: T;
+}
+
+const strA: A = { name: "Semlinker" };
+const numB: A<number> = { name: 101 };

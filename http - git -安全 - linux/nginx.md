@@ -155,12 +155,15 @@ server{
 
 翻墙工具其实就是一个正向代理工具。它会把们访问墙外服务器 server 的网页请求，代理到一个可以访问该网站的代理服务器 proxy，这个代理服务器 proxy 把墙外服务器 server 上的网页内容获取，再转发给客户。
 简单来说就是你想访问目标服务器的权限，但是没有权限。这时候代理服务器有权限访问服务器，并且你有访问代理服务器的权限，这时候你就可以通过访问代理服务器，代理服务器访问真实服务器，把内容给你呈现出来。**这里代理的是客户端的请求，代理对用户是非透明的**。
+**正向代理的过程，隐藏了真实的客户端。客户端请求的服务都被代理服务器代替来请求**
 
 ### 反向代理
 
 反向代理跟代理正好相反（需要说明的是，现在基本所有的大型网站的页面都是用了反向代理），客户端发送的请求，想要访问 server 服务器上的内容。发送的内容被发送到代理服务器上，这个代理服务器再把请求发送到自己设置好的内部服务器上，而用户真实想获得的内容就在这些设置好的服务器上。**这里代理的不是客户，而是服务器，代理对用户是透明的，即无感知**
 
 就是代理服务器和真正 server 服务器可以直接互相访问，属于一个 LAN（服务器内网）；代理对用户是透明的，即无感知。不论加不加这个反向代理，用户都是通过相同的请求进行的，且不需要任何额外的操作；代理服务器通过代理内部服务器接受域外客户端的请求，并将请求发送到对应的内部服务器上。
+
+**两者的区别在于代理的对象不一样：正向代理代理的对象是客户端，反向代理代理的对象是服务端**
 
 #### 为什么要 Nginx 反向代理
 
@@ -194,6 +197,10 @@ location / {
 
 ### 跨域
 
+#### 反向代理解决跨域
+
+···
+
 ```sh
 #请求跨域，这里约定代理请求url path是以/apis/开头
 location ^~/apis/ {
@@ -201,6 +208,37 @@ location ^~/apis/ {
     rewrite ^/apis/(.*)$ /$1 break;
     proxy_pass https://www.kaola.com/;
 }
+```
+
+#### 设置 header 解决跨域
+
+```sh
+# /etc/nginx/conf.d/be.sherlocked93.club.conf
+
+server {
+  listen       80;
+  server_name  be.sherlocked93.club;
+
+	add_header 'Access-Control-Allow-Origin' $http_origin;   # 全局变量获得当前请求origin，带cookie的请求不支持*
+	add_header 'Access-Control-Allow-Credentials' 'true';    # 为 true 可带上 cookie
+	add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';  # 允许请求方法
+	add_header 'Access-Control-Allow-Headers' $http_access_control_request_headers;  # 允许请求的 header，可以为 *
+	add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range';
+
+  if ($request_method = 'OPTIONS') {
+		add_header 'Access-Control-Max-Age' 1728000;   # OPTIONS 请求的有效期，在有效期内不用发出另一条预检请求
+		add_header 'Content-Type' 'text/plain; charset=utf-8';
+		add_header 'Content-Length' 0;
+
+		return 204;                  # 200 也可以
+	}
+
+	location / {
+		root  /usr/share/nginx/html/be;
+		index index.html;
+	}
+}
+
 ```
 
 ### 适配 PC 或移动设备
@@ -249,6 +287,28 @@ location ~ .*\.(jpg|png|gif)$ { # 匹配防盗链资源的文件类型  �
     if ($invalid_referer) {  
         return 403;    
     }
+}
+```
+
+### https
+
+```sh
+server {
+  listen 443 ssl http2 default_server;   # SSL 访问端口号为 443
+  server_name sherlocked93.club;         # 填写绑定证书的域名
+
+  ssl_certificate /etc/nginx/https/1_sherlocked93.club_bundle.crt;   # 证书文件地址
+  ssl_certificate_key /etc/nginx/https/2_sherlocked93.club.key;      # 私钥文件地址
+  ssl_session_timeout 10m;
+
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;      #请按照以下协议配置
+  ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
+  ssl_prefer_server_ciphers on;
+
+  location / {
+    root         /usr/share/nginx/html;
+    index        index.html index.htm;
+  }
 }
 ```
 
@@ -316,3 +376,78 @@ location /{
 proxy_pass http://127.0.0.1:8080;
 }
 }
+
+## alias , root, index, proxy_pass 的区别
+
+### 1.【alias】
+
+**别名配置**，用于访问文件系统，在匹配到 location 配置的 URL 路径后，指向【alias】配置的路径。如：（注意 alias 配置最后一定要有/，而 root 可以没有）
+
+```sh
+location /test/
+{
+alias /home/sftp/img/;
+}
+```
+
+即：请求/test/1.jpg（省略了协议与域名），将会返回文件/home/sftp/img/1.jpg
+
+### 2. root
+
+**根路径配置**，用于访问文件系统，在匹配到 location 配置的 URL 路径后，指向【root】配置的路径，**并把 location 配置路径附加到其后**。如：
+
+```sh
+location /test/
+{
+root /home/sftp/img/;
+
+}
+```
+
+即：请求/test/1.jpg（省略了协议与域名），将会返回文件/home/sftp/img/test/1.jpg，相较于 alias，使用 root 会把/test/附加到根目录之后。
+
+### 3.【proxy_pass】
+
+反向代理配置，用于代理请求，适用于前后端负载分离或多台机器、服务器负载分离的场景，在匹配到 location 配置的 URL 路径后，转发请求到【proxy_pass】配置的 URL，是否会附加 location 配置路径与【proxy_pass】配置的路径后是否有"/"有关，有"/"则不附加，如：
+
+```sh
+location /test/
+{
+proxy_pass http://127.0.0.1:8080/;
+}
+```
+
+即：请求/test/1.jpg（省略了协议与域名），将会被 nginx 转发请求到http://127.0.0.1:8080/1.jpg（未附加/test/路径）。
+
+```sh
+location /test/
+{
+proxy_pass http://127.0.0.1:8080;
+}
+```
+
+即：请求/test/1.jpg（省略了协议与域名），将会被 nginx 转发请求到http://127.0.0.1:8080/test/1.jpg（附加/test/路径）。
+
+```sh
+location /test/
+{
+proxy_pass http://127.0.0.1:8080/img;
+}
+```
+
+即：请求/test/1.jpg（省略了协议与域名），将会被 nginx 转发请求到http://127.0.0.1:8080/img1.jpg（未附加/test/路径，但附加了/test/之后的路径）。
+
+### 4.【index】，一般有这样的配置：
+
+```sh
+location / {
+　　root html;
+　　index index.html index.htm;
+}
+```
+
+注意，这里的 root 后面没有跟绝对路径，即前面没有/xxx 这种写法，所以它指的是 nginx 根目录下的 html；
+
+即假设请求 http://localhost/test/uu.html 匹配的是这个规则，那么 nginx 会从根据是 root 是得知是访问文件系统（而非访问其他网络，可以理解为此时的 nginx 是正向代理），然后判断 html 前面没有/或者是:这样的用于描述绝对路径的写法，说明这个路径是相对于 nginx 根目录下的 html 目录，所以最终是从 html 里找 test 目录下的 uu.html 文件返回；
+
+这里的 index 是当比如请求 http://localhost 时默认其实在 nginx 里是 http://localhost/index（但是如果客户端这么写则 nginx 会认为是找绝对文件 index 所以会提示找不到），所以这里的 index 其实就是指示当是 index 时优先从 niginx 目录下的 html 目录里找 index.html 返回，没有才找 index.htm 返回；
